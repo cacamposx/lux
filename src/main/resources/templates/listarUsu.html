@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,11 +7,17 @@
 </head>
 <body>
     <h1>Lista de Usuários</h1>
+
+    <!-- Formulário de filtro por nome -->
     <form action="/listarUsu" method="get">
         <input type="text" name="nome" placeholder="Filtrar por nome">
         <button type="submit">Filtrar</button>
     </form>
+
+    <!-- Link para adicionar um novo usuário -->
     <a href="/cadastrarUsu">+</a>
+
+    <!-- Tabela de usuários -->
     <table>
         <tr>
             <th>Nome</th>
@@ -19,13 +25,19 @@
             <th>Email</th>
             <th>Status</th>
             <th>Grupo</th>
+            <th>Ações</th>
         </tr>
+        <!-- Exibindo cada usuário -->
         <tr th:each="usuario : ${usuarios}">
             <td th:text="${usuario.nome}"></td>
             <td th:text="${usuario.cpf}"></td>
             <td th:text="${usuario.email}"></td>
             <td th:text="${usuario.status ? 'Ativo' : 'Inativo'}"></td>
             <td th:text="${usuario.grupo}"></td>
+            <td>
+                <!-- Botão para alterar o usuário -->
+                <a th:href="@{/alterarUsu(idUsuario=${usuario.idUsuario})}">Alterar</a>
+            </td>
         </tr>
     </table>
 </body>
