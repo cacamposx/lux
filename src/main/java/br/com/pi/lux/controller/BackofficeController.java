@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/backoffice")
 public class BackofficeController {
-    @GetMapping
+    @GetMapping("/backoffice")
     public String backoffice() {
         return "backoffice";
     }

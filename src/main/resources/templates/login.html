@@ -4,34 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tela de Login</title>
-  <!-- Link para o Bootstrap -->
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="bg-light"> <!-- Cor de fundo da página -->
+<body class="bg-light">
 
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">   <!-- Container que centraliza o conteúdo da página -->
-  <div class="card p-4 shadow-lg" style="width: 100%; max-width: 400px;">   <!-- Cartão que contém o formulário de login -->
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+  <div class="card p-4 shadow-lg" style="width: 100%; max-width: 400px;">
     <h3 class="text-center mb-4">Login</h3>
 
-    <!-- Formulário de Login -->
-    <form th:action="@{/login}" method="post">  <!-- Formulário que envia os dados para a rota /login -->
-      <!-- Campo que recebe o email do usuario -->
+    <form th:action="@{/login}" method="post">
       <div class="form-group">
         <label for="email">Email</label>
-        <input type="email" class="form-control" id="email" placeholder="Digite seu email" required>
+        <input type="email" class="form-control" id="email" name="email" placeholder="Digite seu email" required>
       </div>
-      <!-- Campo que recebe a senha do usuario -->
       <div class="form-group">
-        <label for="password">Senha</label>
-        <input type="password" class="form-control" id="password" placeholder="Digite sua senha" required>
+        <label for="senha">Senha</label>
+        <input type="password" class="form-control" id="senha" name="senha" placeholder="Digite sua senha" required>
       </div>
 
       <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+      <button type="reset" class="btn btn-primary btn-block">Cancelar</button>
     </form>
   </div>
 </div>
 
-<!-- Scripts Bootstrap e JQuery -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
