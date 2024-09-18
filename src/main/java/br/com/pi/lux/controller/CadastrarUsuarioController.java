@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import br.com.pi.lux.model.Usuario;
 import br.com.pi.lux.repository.UsuarioRepository;
 import org.mindrot.jbcrypt.BCrypt;
+
 import java.util.Optional;
 
 @Controller
@@ -19,7 +20,8 @@ public class CadastrarUsuarioController {
     private UsuarioRepository repository;
 
     @GetMapping("/cadastrarUsu")
-    public String mostrarFormularioCadastro() {
+    public String mostrarFormularioCadastro(Model model) {
+        model.addAttribute("usuario", new Usuario());
         return "cadastrarUsu";
     }
 
@@ -66,6 +68,8 @@ public class CadastrarUsuarioController {
         repository.save(usuario);
 
         model.addAttribute("mensagem", "Usuário cadastrado com sucesso!");
+        model.addAttribute("usuario", new Usuario());
+
         return "cadastrarUsu"; 
     }
 
@@ -74,3 +78,4 @@ public class CadastrarUsuarioController {
         return cpfLimpo.length() == 11;
     }
 }
+
