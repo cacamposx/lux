@@ -41,12 +41,12 @@ public class LoginController {
                 return "backoffice";
             } else {
                 model.addAttribute("mensagem", "Senha incorreta!");
+                return "login";
             }
         } else {
             model.addAttribute("mensagem", "E-mail não cadastrado!");
+            return "login";
         }
-    
-        return "/backoffice";
     }
     
 }
