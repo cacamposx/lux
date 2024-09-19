@@ -13,6 +13,8 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.Optional;
 
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class LoginController {
 
@@ -21,24 +23,28 @@ public class LoginController {
 
     @GetMapping("/login")
     public String mostrarFormularioLogin(Model model) {
-        model.addAttribute("usuario", new Usuario());
         return "login";
     }
+
 
     @PostMapping("/login")
     public String autenticarUsuario(
             @RequestParam String email,
             @RequestParam String senha,
-            Model model) {
+            Model model,
+            HttpSession session) {
 
         Optional<Usuario> usuarioOptional = repository.findByEmail(email);
-    
+
         if (usuarioOptional.isPresent()) {
             Usuario usuario = usuarioOptional.get();
-    
+            session.setAttribute("usuario", usuario);
+
             if (BCrypt.checkpw(senha, usuario.getSenha())) {
                 model.addAttribute("mensagem", "Login realizado com sucesso!");
-                return "backoffice";
+
+                return "redirect:/backoffice";
+
             } else {
                 model.addAttribute("mensagem", "Senha incorreta!");
                 return "login";
@@ -48,5 +54,4 @@ public class LoginController {
             return "login";
         }
     }
-    
 }

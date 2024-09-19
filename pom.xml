@@ -10,6 +10,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
+
 	<groupId>br.com.pi</groupId>
 	<artifactId>lux</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -17,7 +18,7 @@
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
-		<java.version>21</java.version>
+		<java.version>17</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 	</properties>
@@ -33,6 +34,14 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<!-- Jakarta Servlet API -->
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<version>5.0.0</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- Spring Boot Starter Data JPA -->
@@ -82,6 +91,7 @@
 			<version>0.4</version>
 		</dependency>
 	</dependencies>
+
 
 	<build>
 		<plugins>

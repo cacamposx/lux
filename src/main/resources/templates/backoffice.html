@@ -1,15 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="/css/backoffice.css">
+    <title>Backoffice</title>
+    <link rel="stylesheet" th:href="@{/css/backoffice.css}">
 </head>
 <body>
-    <div class="titulo">BACKOFFICE</div>
-    <a href="/listarProd">Listar Produto</a>
-    <a href="/listarUsu">Listar Usuário</a>
-    <a href="/">Listar Pedidos</a>
+<div class="titulo">BACKOFFICE</div>
+
+<nav>
+    <a th:href="@{/listarProd}">Listar Produto</a>
+
+    <a th:if="${usuarioLogado.grupo == 'admin'}"
+       th:href="@{/listarUsu}">
+        Listar Usuário
+    </a>
+
+    <a th:href="@{/listarPedidos}">Listar Pedidos</a>
+</nav>
 </body>
 </html>
