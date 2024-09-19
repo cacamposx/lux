@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/alterarProd.css">
+    <title>Alterar Produto</title>
+</head>
+<body>
+    <h1>Alterar Produto</h1>
+
+    <div th:if="${mensagem}">
+        <p th:text="${mensagem}"></p>
+    </div>
+
+    <form action="/alterarProd" method="post">
+        <input type="hidden" name="idProduto" th:value="${produto.idProduto}">
+
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" th:value="${produto.nome}" required>
+
+        <label for="preco">Preço:</label>
+        <input type="number" step="0.01" id="preco" name="preco" th:value="${produto.preco}" required>
+
+        <label for="quantidade">Quantidade:</label>
+        <input type="number" id="quantidade" name="quantidade" th:value="${produto.quantidade}" required>
+
+        <label for="descricao">Descrição:</label>
+        <textarea id="descricao" name="descricao" required th:text="${produto.descricao}"></textarea>
+
+        <label for="avaliacao">Avaliação:</label>
+        <input type="number" step="0.1" id="avaliacao" name="avaliacao" th:value="${produto.avaliacao}" required>
+
+        <label for="status">Status:</label>
+        <select id="status" name="status" required>
+            <option value="true" th:selected="${produto.status}">Ativo</option>
+            <option value="false" th:selected="${!produto.status}">Inativo</option>
+        </select>
+
+        <button type="submit">Salvar Alterações</button>
+        <a href="/listarProd" class="button-link"><button type="button">Cancelar</button></a>
+        <a href="/listarProd" class="button-link2">Voltar à Lista de Produtos</a>
+
+    </form>
+
+</body>
+</html>

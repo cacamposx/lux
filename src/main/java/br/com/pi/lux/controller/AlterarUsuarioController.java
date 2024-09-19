@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.Optional;
 
@@ -30,19 +31,32 @@ public class AlterarUsuarioController {
     }
 
     @PostMapping("/alterarUsu")
-    public String alterarUsuario(@RequestParam int idUsuario, 
-                                 @RequestParam String nome, 
-                                 @RequestParam String cpf, 
-                                 @RequestParam String email, 
-                                 @RequestParam String grupo, 
+    public String alterarUsuario(@RequestParam int idUsuario,
+                                 @RequestParam String nome,
+                                 @RequestParam String cpf,
+                                 @RequestParam String senha,
+                                 @RequestParam String confirmaSenha,
+                                 @RequestParam String grupo,
                                  Model model) {
+
+        // Verifica se as senhas coincidem
+        if (!senha.equals(confirmaSenha)) {
+            model.addAttribute("mensagem", "As senhas não coincidem!");
+            return "alterarUsu";
+        }
+
         Optional<Usuario> usuarioOptional = repository.findById(idUsuario);
         if (usuarioOptional.isPresent()) {
             Usuario usuario = usuarioOptional.get();
             usuario.setNome(nome);
-            usuario.setCpf(cpf);
-            usuario.setEmail(email);
+            usuario.setCpf(cpf.replaceAll("[^\\d]", "")); // Remove caracteres não numéricos
             usuario.setGrupo(grupo);
+
+            // Atualiza a senha encriptada
+            if (!senha.isEmpty()) {
+                usuario.setSenha(BCrypt.hashpw(senha, BCrypt.gensalt()));
+            }
+
             repository.save(usuario);
             model.addAttribute("mensagem", "Usuário alterado com sucesso!");
             return "redirect:/listarUsu";
@@ -52,4 +66,3 @@ public class AlterarUsuarioController {
         }
     }
 }
-

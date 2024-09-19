@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login de Usuário</title>
+    <link rel="stylesheet" href="/css/login.css">
 </head>
 <body>
-    <h1>Login de Usuário</h1>
 
-    <div style="color: red;">
-        <p th:text="${mensagem}" ></p>
+    <div class="titulo">LOGIN</div>
+
+    <div class="erro">
+        <p th:text="${mensagem}"></p>
     </div>
 
     <form action="/login" method="post">

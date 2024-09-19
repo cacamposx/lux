@@ -3,36 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/alterarUsu.css">
     <title>Alterar Usuário</title>
-    <style>
-        form {
-            display: flex;
-            flex-direction: column;
-            max-width: 300px;
-        }
-
-        label, input {
-            margin-bottom: 10px;
-        }
-
-        button {
-            margin-top: 10px;
-            padding: 5px 10px;
-        }
-    </style>
 </head>
 <body>
     <h1>Alterar Usuário</h1>
 
-    <!-- Exibição de mensagens (sucesso ou erro) -->
     <div th:if="${mensagem}">
         <p th:text="${mensagem}"></p>
     </div>
 
-    <!-- Formulário de alteração -->
     <form action="/alterarUsu" method="post">
         <input type="hidden" name="idUsuario" th:value="${usuario.idUsuario}">
-
 
         <label for="nome">Nome:</label>
         <input type="text" id="nome" name="nome" th:value="${usuario.nome}" required>
@@ -41,7 +23,13 @@
         <input type="text" id="cpf" name="cpf" th:value="${usuario.cpf}" required>
 
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" th:value="${usuario.email}" required>
+        <input type="email" id="email" name="email" th:value="${usuario.email}" readonly class="readonly">
+
+        <label for="senha">Senha:</label>
+        <input type="password" id="senha" name="senha">
+
+        <label for="confirmaSenha">Confirme a Senha:</label>
+        <input type="password" id="confirmaSenha" name="confirmaSenha">
 
         <label for="grupo">Grupo:</label>
         <select id="grupo" name="grupo" required>
@@ -49,12 +37,13 @@
             <option value="estoquista" th:selected="${usuario.grupo == 'estoquista'}">Estoquista</option>
         </select>
 
-        <button type="submit">Salvar Alterações</button>
-<a href="/listarUsu"><button type="button">Cancelar</button></a>
+        <label for="status">Status:</label>
+        <input type="text" id="status" name="status" th:value="${usuario.status ? 'Ativo' : 'Inativo'}" readonly class="readonly">
 
+        <button type="submit">Salvar Alterações</button>
+        <a href="/listarUsu"><button type="button">Cancelar</button></a>
+        <a href="/listarUsu">Voltar à Lista de Usuários</a>
     </form>
 
-    <!-- Link para voltar à lista de usuários -->
-    <a href="/listarUsu">Voltar à Lista de Usuários</a>
 </body>
 </html>

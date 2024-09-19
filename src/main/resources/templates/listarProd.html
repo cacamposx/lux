@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/listarProd.css">
+    <title>Listar Produtos</title>
+</head>
+<body>
+    <div class="titulo">LISTA DE PRODUTOS</div>
+
+    <a href="/cadastrarProd">+</a>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Quantidade</th>
+                <th>Preço</th>
+                <th>Avaliação</th>
+                <th>Status</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="produto : ${produtos}">
+                <td th:text="${produto.idProduto}"></td>
+                <td th:text="${produto.nome}"></td>
+                <td th:text="${produto.descricao}"></td>
+                <td th:text="${produto.quantidade}"></td>
+                <td th:text="${produto.preco}"></td>
+                <td th:text="${produto.avaliacao}"></td>
+                <td th:text="${produto.status ? 'Ativo' : 'Inativo'}"></td>
+                <td>
+                    <a th:href="@{/alterarProd(idProduto=${produto.idProduto})}">Alterar</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul class="pagination">
+        <li th:if="${paginaAtual > 0}">
+            <a th:href="@{/listarProd(pagina=${paginaAtual - 1})}">« Anterior</a>
+        </li>
+        <li th:each="i : ${#numbers.sequence(0, totalPaginas - 1)}"
+            th:classappend="${i == paginaAtual ? 'active' : ''}">
+            <a th:href="@{/listarProd(pagina=${i})}" th:text="${i + 1}"></a>
+        </li>
+        <li th:if="${paginaAtual < totalPaginas - 1}">
+            <a th:href="@{/listarProd(pagina=${paginaAtual + 1})}">Próximo »</a>
+        </li>
+    </ul>
+
+    <a href="/backoffice">Voltar ao Menu Principal</a>
+
+</body>
+</html>

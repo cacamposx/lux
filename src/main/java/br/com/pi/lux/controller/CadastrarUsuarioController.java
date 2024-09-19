@@ -70,12 +70,38 @@ public class CadastrarUsuarioController {
         model.addAttribute("mensagem", "Usuário cadastrado com sucesso!");
         model.addAttribute("usuario", new Usuario());
 
-        return "cadastrarUsu"; 
+        return "redirect:/listarUsu";
     }
 
     private boolean isValidCPF(String cpf) {
         String cpfLimpo = cpf.replaceAll("[^\\d]", "");
-        return cpfLimpo.length() == 11;
+        
+        if (cpfLimpo.length() != 11 || cpfLimpo.matches("^(\\d)\\1{10}$")) {
+            return false;
+        }
+    
+        int soma = 0;
+        int peso = 10;
+        
+        for (int i = 0; i < 9; i++) {
+            soma += Character.getNumericValue(cpfLimpo.charAt(i)) * peso--;
+        }
+        
+        int digito1 = 11 - (soma % 11);
+        digito1 = digito1 > 9 ? 0 : digito1;
+        
+        soma = 0;
+        peso = 11;
+        
+        for (int i = 0; i < 10; i++) {
+            soma += Character.getNumericValue(cpfLimpo.charAt(i)) * peso--;
+        }
+        
+        int digito2 = 11 - (soma % 11);
+        digito2 = digito2 > 9 ? 0 : digito2;
+        
+        return cpfLimpo.charAt(9) == (char) (digito1 + '0') && cpfLimpo.charAt(10) == (char) (digito2 + '0');
     }
+    
 }
 
