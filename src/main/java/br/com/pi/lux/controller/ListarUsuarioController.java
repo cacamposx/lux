@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import br.com.pi.lux.model.Usuario;
 import br.com.pi.lux.repository.UsuarioRepository;
+
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -17,15 +19,27 @@ public class ListarUsuarioController {
     private UsuarioRepository repository;
 
     @GetMapping("/listarUsu")
-    public String listarUsuarios(@RequestParam(required = false) String nome, Model model) {
-        List<Usuario> usuarios;
-        if (nome != null && !nome.isEmpty()) {
-            usuarios = repository.findByNomeContainingIgnoreCase(nome);
+    public String listarUsuarios(
+            @RequestParam(required = false) String nome,
+            Model model,
+            HttpSession session) {
+
+
+        Usuario usuarioLogado = (Usuario) session.getAttribute("usuario");
+
+
+        if (usuarioLogado != null && "admin".equals(usuarioLogado.getGrupo())) {
+            List<Usuario> usuarios;
+            if (nome != null && !nome.isEmpty()) {
+                usuarios = repository.findByNomeContainingIgnoreCase(nome);
+            } else {
+                usuarios = repository.findAll();
+            }
+            model.addAttribute("usuarios", usuarios);
+            return "listarUsu";
         } else {
-            usuarios = repository.findAll();
+
+            return "redirect:/login";
         }
-        model.addAttribute("usuarios", usuarios);
-        return "listarUsu";
     }
 }
-
