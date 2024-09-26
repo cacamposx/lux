@@ -17,7 +17,7 @@
         Listar Usuário
     </a>
 
-    <a th:href="@{/listarPedidos}">Listar Pedidos</a>
+    <a th:if="${usuarioLogado.grupo == 'estoquista'}" th:href="@{/listarPedidos}">Listar Pedidos</a>
 </nav>
 </body>
 </html>

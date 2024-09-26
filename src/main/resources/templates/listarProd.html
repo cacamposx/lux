@@ -35,6 +35,8 @@
                 <td th:text="${produto.status ? 'Ativo' : 'Inativo'}"></td>
                 <td>
                     <a th:href="@{/alterarProd(idProduto=${produto.idProduto})}">Alterar</a>
+                    <a th:if="${produto.status}" th:href="@{/alterarStatusProd(idProduto=${produto.idProduto})}">Desativar</a>
+                    <a th:if="${!produto.status}" th:href="@{/alterarStatusProd(idProduto=${produto.idProduto})}">Ativar</a>
                 </td>
             </tr>
         </tbody>

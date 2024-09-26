@@ -33,14 +33,9 @@
             <td th:text="${usuario.grupo}"></td>
             <td>
                 <a th:href="@{/alterarUsu(idUsuario=${usuario.idUsuario})}">Alterar</a>
-            </td>
-            <td>
-            <td>
-            <td>
                 <a th:if="${usuario.status}" th:href="@{/alterarStatus(idUsuario=${usuario.idUsuario})}">Desativar</a>
                 <a th:if="${!usuario.status}" th:href="@{/alterarStatus(idUsuario=${usuario.idUsuario})}">Ativar</a>
-            </td>
-            </td>
+
             </td>
         </tr>
     </table>
