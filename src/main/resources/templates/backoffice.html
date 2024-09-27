@@ -3,21 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Backoffice</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" th:href="@{/css/backoffice.css}">
+    <title>Backoffice</title>
 </head>
 <body>
-<div class="titulo">BACKOFFICE</div>
+<div class="container">
+    <div class="titulo my-4">BACKOFFICE</div>
 
-<nav>
-    <a th:href="@{/listarProd}">Listar Produto</a>
-
-    <a th:if="${usuarioLogado.grupo == 'admin'}"
-       th:href="@{/listarUsu}">
-        Listar Usuário
-    </a>
-
-    <a th:if="${usuarioLogado.grupo == 'estoquista'}" th:href="@{/listarPedidos}">Listar Pedidos</a>
-</nav>
+    <nav class="nav flex-column">
+        <a th:href="@{/listarProd}" class="nav-link">Listar Produto</a>
+        <a th:if="${usuarioLogado.grupo == 'admin'}" th:href="@{/listarUsu}" class="nav-link">Listar Usuário</a>
+        <a th:if="${usuarioLogado.grupo == 'estoquista'}" th:href="@{/listarPedidos}" class="nav-link">Listar Pedidos</a>
+    </nav>
+</div>
 </body>
 </html>

@@ -3,16 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/listarProd.css">
     <title>Listar Produtos</title>
 </head>
 <body>
-    <div class="titulo">LISTA DE PRODUTOS</div>
+<div class="container">
+    <div class="titulo my-4">LISTA DE PRODUTOS</div>
 
-    <a href="/cadastrarProd">+</a>
+    <form class="form-inline mb-3">
+        <div class="form-group mr-2">
+            <input type="text" name="nome" class="form-control" placeholder="Filtrar por nome">
+        </div>
+        <button type="submit" class="btn btn-primary">Filtrar</button>
+    </form>
 
-    <table class="table">
-        <thead>
+    <a href="/cadastrarProd" class="btn btn-success mb-3">+</a>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
             <tr>
                 <th>ID</th>
                 <th>Nome</th>
@@ -23,8 +33,8 @@
                 <th>Status</th>
                 <th>Ações</th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             <tr th:each="produto : ${produtos}">
                 <td th:text="${produto.idProduto}"></td>
                 <td th:text="${produto.nome}"></td>
@@ -34,28 +44,28 @@
                 <td th:text="${produto.avaliacao}"></td>
                 <td th:text="${produto.status ? 'Ativo' : 'Inativo'}"></td>
                 <td>
-                    <a th:href="@{/alterarProd(idProduto=${produto.idProduto})}">Alterar</a>
-                    <a th:if="${produto.status}" th:href="@{/alterarStatusProd(idProduto=${produto.idProduto})}">Desativar</a>
-                    <a th:if="${!produto.status}" th:href="@{/alterarStatusProd(idProduto=${produto.idProduto})}">Ativar</a>
+                    <a th:href="@{/alterarProd(idProduto=${produto.idProduto})}" class="btn btn-warning btn-sm">Alterar</a>
+                    <a th:if="${produto.status}" th:href="@{/alterarStatusProd(idProduto=${produto.idProduto})}" class="btn btn-danger btn-sm">Desativar</a>
+                    <a th:if="${!produto.status}" th:href="@{/alterarStatusProd(idProduto=${produto.idProduto})}" class="btn btn-success btn-sm">Ativar</a>
                 </td>
             </tr>
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
 
     <ul class="pagination">
-        <li th:if="${paginaAtual > 0}">
-            <a th:href="@{/listarProd(pagina=${paginaAtual - 1})}">« Anterior</a>
+        <li th:if="${paginaAtual > 0}" class="page-item">
+            <a th:href="@{/listarProd(pagina=${paginaAtual - 1})}" class="page-link">« Anterior</a>
         </li>
-        <li th:each="i : ${#numbers.sequence(0, totalPaginas - 1)}"
-            th:classappend="${i == paginaAtual ? 'active' : ''}">
-            <a th:href="@{/listarProd(pagina=${i})}" th:text="${i + 1}"></a>
+        <li th:each="i : ${#numbers.sequence(0, totalPaginas - 1)}" th:classappend="${i == paginaAtual ? 'active' : ''}" class="page-item">
+            <a th:href="@{/listarProd(pagina=${i})}" th:text="${i + 1}" class="page-link"></a>
         </li>
-        <li th:if="${paginaAtual < totalPaginas - 1}">
-            <a th:href="@{/listarProd(pagina=${paginaAtual + 1})}">Próximo »</a>
+        <li th:if="${paginaAtual < totalPaginas - 1}" class="page-item">
+            <a th:href="@{/listarProd(pagina=${paginaAtual + 1})}" class="page-link">Próximo »</a>
         </li>
     </ul>
 
-    <a href="/backoffice">Voltar ao Menu Principal</a>
-
+    <a href="/backoffice" class="btn btn-secondary mt-3">Voltar ao Menu Principal</a>
+</div>
 </body>
 </html>

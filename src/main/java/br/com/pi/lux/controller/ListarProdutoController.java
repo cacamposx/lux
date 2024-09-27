@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import br.com.pi.lux.model.Produto;
 import br.com.pi.lux.repository.ProdutoRepository;
 
+import java.util.List;
+
 @Controller
 public class ListarProdutoController {
 
@@ -22,7 +24,7 @@ public class ListarProdutoController {
     private static final int PRODUTOS_POR_PAGINA = 10;
 
     @GetMapping("/listarProd")
-    public String listarProdutos(@RequestParam(defaultValue = "0") int pagina, Model model) {
+    public String listarProdutos(@RequestParam(defaultValue = "0") int pagina, Model model, @RequestParam(required = false) String nome) {
         Pageable pageable = PageRequest.of(pagina, PRODUTOS_POR_PAGINA, Sort.by(Sort.Order.desc("data")));
         Page<Produto> produtosPage = repository.findAll(pageable);
 
@@ -31,6 +33,13 @@ public class ListarProdutoController {
         model.addAttribute("totalPaginas", produtosPage.getTotalPages());
         model.addAttribute("totalProdutos", produtosPage.getTotalElements());
 
+        List<Produto> produtos;
+        if(nome != null && !nome.isEmpty()) {
+            produtos = repository.findByNomeContainingIgnoreCase(nome, pageable).getContent();
+        } else {
+            produtos = repository.findAll();
+        }
+        model.addAttribute("produtos", produtos);
         return "listarProd";
     }
 }
