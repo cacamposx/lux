@@ -1,15 +1,9 @@
 package br.com.pi.lux.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "tb_produto")
@@ -18,7 +12,7 @@ public class Produto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idProduto;
-    
+
     @Column(nullable = false)
     private String nome;
 
@@ -37,22 +31,26 @@ public class Produto {
     @Column(nullable = false)
     private boolean status;
 
-    @Lob
-    @Column(nullable = true)
-    private byte[] imagem;
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProdutoImagem> imagens;
 
     @Column(nullable = false)
     private LocalDateTime data;
+
+    private String base64Image;
 
     @PrePersist
     protected void onCreate() {
         this.data = LocalDateTime.now();
     }
+    @Lob
+    private byte[] imagemPrincipal; // Armazenando a imagem como byte[]
 
-    public Produto(){
+    // Construtores
+    public Produto() {
     }
 
-    public Produto(int idProduto, String nome, String descricao, int quantidade, double preco, double avaliacao, boolean status, byte[] imagem, LocalDateTime data) {
+    public Produto(int idProduto, String nome, String descricao, int quantidade, double preco, double avaliacao, boolean status, List<ProdutoImagem> imagens, LocalDateTime data) {
         this.idProduto = idProduto;
         this.nome = nome;
         this.descricao = descricao;
@@ -60,9 +58,11 @@ public class Produto {
         this.preco = preco;
         this.avaliacao = avaliacao;
         this.status = status;
-        this.imagem = imagem;
+        this.imagens = imagens;
         this.data = data;
     }
+
+    // Getters e Setters
 
     public int getIdProduto() {
         return idProduto;
@@ -120,20 +120,39 @@ public class Produto {
         this.status = status;
     }
 
-    public byte[] getImagem() {
-        return imagem;
-    }
-
-    public void setImagem(byte[] imagem) {
-        this.imagem = imagem;
-    }
-
     public LocalDateTime getData() {
         return data;
     }
 
     public void setData(LocalDateTime data) {
         this.data = data;
+    }
+
+    public List<ProdutoImagem> getImagens() {
+        return imagens;
+    }
+
+    public void setImagens(List<ProdutoImagem> imagens) {
+        this.imagens = imagens;
+    }
+
+
+    // Método para obter a imagem principal
+    public ProdutoImagem getImagemPrincipal() {
+        return imagens.stream().filter(ProdutoImagem::isPrincipal).findFirst().orElse(null);
+    }
+
+
+    public void setImagemPrincipal(byte[] imagemPrincipal) {
+        this.imagemPrincipal = imagemPrincipal;
+    }
+
+    public String getBase64Image() {
+        return base64Image;
+    }
+
+    public void setBase64Image(String base64Image) {
+        this.base64Image = base64Image;
     }
 
 }

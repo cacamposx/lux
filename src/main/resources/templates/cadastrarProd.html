@@ -7,32 +7,38 @@
     <title>Cadastro de Produto</title>
 </head>
 <body>
-    <h1>Cadastro de Produto</h1>
+<h1>Cadastro de Produto</h1>
 
-    <div style="color: red;">
-        <p th:text="${mensagem}"></p>
-    </div>
+<div style="color: red;">
+    <p th:text="${mensagem}"></p>
+</div>
 
-    <form action="/cadastrarProd" method="post">
-        <label for="nome">Nome Produto:</label>
-        <input type="text" id="nome" name="nome" required><br>
-    
-        <label for="preco">Preço:</label>
-        <input type="number" id="preco" name="preco" step="0.01" required><br>
-    
-        <label for="quantidade">Qtd. Estoque:</label>
-        <input type="number" id="quantidade" name="quantidade" required><br>
-    
-        <label for="descricao">Descrição Detalhada:</label>
-        <textarea id="descricao" name="descricao" required></textarea><br>
-    
-        <label for="avaliacao">Avaliação:</label>
-        <input type="number" id="avaliacao" name="avaliacao" step="0.1" required><br>
-    
-        <button type="submit">Cadastrar Produto</button>
+<form action="/cadastrarProd" method="post" enctype="multipart/form-data">
+    <label for="nome">Nome Produto:</label>
+    <input type="text" id="nome" name="nome" required><br>
 
-        <a href="/listarProd">Voltar à Lista de Produtos</a>
-    </form>
+    <label for="preco">Preço:</label>
+    <input type="number" id="preco" name="preco" step="0.01" required><br>
+
+    <label for="quantidade">Qtd. Estoque:</label>
+    <input type="number" id="quantidade" name="quantidade" required><br>
+
+    <label for="descricao">Descrição Detalhada:</label>
+    <textarea id="descricao" name="descricao" required></textarea><br>
+
+    <label for="avaliacao">Avaliação:</label>
+    <input type="number" id="avaliacao" name="avaliacao" step="0.1" required><br>
+
+    <label for="imagens">Imagens do Produto:</label>
+    <input type="file" id="imagens" name="imagens" multiple accept="image/*"><br>
+
+    <label for="principalImagem">Imagem Principal (índice):</label>
+    <input type="number" id="principalImagem" name="principalImagem" min="0" placeholder="0 para primeira imagem"><br>
+
+    <button type="submit">Cadastrar Produto</button>
+
+    <a href="/listarProd">Voltar à Lista de Produtos</a>
+</form>
 
 </body>
 </html>

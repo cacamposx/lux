@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import br.com.pi.lux.model.Produto;
 import br.com.pi.lux.repository.ProdutoRepository;
 
-import java.util.List;
+import java.util.Base64;
 
 @Controller
 public class ListarProdutoController {
@@ -24,22 +24,33 @@ public class ListarProdutoController {
     private static final int PRODUTOS_POR_PAGINA = 10;
 
     @GetMapping("/listarProd")
-    public String listarProdutos(@RequestParam(defaultValue = "0") int pagina, Model model, @RequestParam(required = false) String nome) {
+    public String listarProdutos(
+            @RequestParam(defaultValue = "0") int pagina,
+            Model model,
+            @RequestParam(required = false) String nome) {
+
         Pageable pageable = PageRequest.of(pagina, PRODUTOS_POR_PAGINA, Sort.by(Sort.Order.desc("data")));
-        Page<Produto> produtosPage = repository.findAll(pageable);
+        Page<Produto> produtosPage;
+
+        if (nome != null && !nome.isEmpty()) {
+            produtosPage = repository.findByNomeContainingIgnoreCase(nome, pageable);
+        } else {
+            produtosPage = repository.findAll(pageable);
+        }
+
+        // Adicionando a imagem codificada em Base64
+        produtosPage.getContent().forEach(produto -> {
+            if (produto.getImagens() != null && !produto.getImagens().isEmpty()) {
+                String base64Image = Base64.getEncoder().encodeToString(produto.getImagens().get(0).getImagem());
+                produto.setBase64Image(base64Image); // Assegure-se de ter este método na sua classe Produto
+            }
+        });
 
         model.addAttribute("produtos", produtosPage.getContent());
         model.addAttribute("paginaAtual", pagina);
         model.addAttribute("totalPaginas", produtosPage.getTotalPages());
         model.addAttribute("totalProdutos", produtosPage.getTotalElements());
 
-        List<Produto> produtos;
-        if(nome != null && !nome.isEmpty()) {
-            produtos = repository.findByNomeContainingIgnoreCase(nome, pageable).getContent();
-        } else {
-            produtos = repository.findAll();
-        }
-        model.addAttribute("produtos", produtos);
         return "listarProd";
     }
 }

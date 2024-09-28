@@ -2,66 +2,56 @@ body {
     background-color: #f0f0f0;
     font-family: Arial, sans-serif;
     margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
 }
 
 .titulo {
-    font-size: 48px; 
-    color: #004d40; 
-    font-weight: bold; 
-    text-transform: uppercase; 
+    font-size: 2.5rem;
+    color: #004d40;
+    font-weight: bold;
+    text-transform: uppercase;
     margin-bottom: 20px;
+    text-align: center;
 }
 
-a {
-    text-decoration: none;
-    color: #004d40; 
-    font-size: 1.5em;
-    margin-bottom: 20px;
-    display: block;
-}
-
-a:hover {
-    color: #003d33; 
+.form-inline {
+    justify-content: center;
 }
 
 .table {
-    width: 70%;
     border-collapse: collapse;
     margin-bottom: 20px;
 }
 
 .table th, .table td {
     border: 1px solid #ddd;
-    padding: 5px;
+    padding: 10px;
     text-align: left;
-    line-height: 1.2;
 }
 
 .table th {
-    background-color: #004d40; 
+    background-color: #004d40;
     color: #ffffff;
 }
 
 .table tr:nth-child(even) {
-    background-color: #f9f9f9; 
+    background-color: #f9f9f9;
 }
 
 .table tr:hover {
-    background-color: #f1f1f1; 
+    background-color: #e9e9e9;
 }
 
 .pagination {
     display: flex;
+    justify-content: center;
     list-style-type: none;
     padding: 0;
-    justify-content: center; 
 }
 
 .pagination li {
@@ -70,7 +60,7 @@ a:hover {
 
 .pagination a {
     text-decoration: none;
-    color: #004d40; 
+    color: #004d40;
     padding: 8px 12px;
     border-radius: 5px;
     background-color: #e0e0e0;
@@ -83,6 +73,10 @@ a:hover {
 .pagination .active a {
     font-weight: bold;
     text-decoration: underline;
-    background-color: #004d40; 
+    background-color: #004d40;
     color: #ffffff;
+}
+
+.btn {
+    font-size: 1rem;
 }
