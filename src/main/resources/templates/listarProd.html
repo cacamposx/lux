@@ -11,11 +11,12 @@
 <div class="container">
     <div class="titulo my-4">LISTA DE PRODUTOS</div>
 
-    <form class="form-inline mb-3">
+    <form class="form-inline mb-3" method="GET">
         <div class="form-group mr-2">
-            <input type="text" name="nome" class="form-control" placeholder="Filtrar por nome">
+            <input type="text" name="nome" class="form-control" placeholder="Filtrar por nome" value="">
         </div>
-        <button type="submit" class="btn btn-primary">Filtrar</button>
+        <button type="submit" class="btn btn-primary mr-2">Filtrar</button>
+        <a href="/listarProd" class="btn btn-outline-secondary">Limpar Filtro</a>
     </form>
 
     <a href="/cadastrarProd" class="btn btn-success mb-3">Adicionar Produto</a>
@@ -25,11 +26,11 @@
             <thead>
             <tr>
                 <th>Imagem</th>
-                <th>ID</th>
-                <th>Nome</th>
+                <th>ID <a href="?sort=idProduto,asc">&#9650;</a> <a href="?sort=idProduto,desc">&#9660;</a></th>
+                <th>Nome <a href="?sort=nome,asc">&#9650;</a> <a href="?sort=nome,desc">&#9660;</a></th>
                 <th>Descrição</th>
                 <th>Quantidade</th>
-                <th>Preço</th>
+                <th>Preço <a href="?sort=preco,asc">&#9650;</a> <a href="?sort=preco,desc">&#9660;</a></th>
                 <th>Avaliação</th>
                 <th>Status</th>
                 <th>Ações</th>
@@ -38,9 +39,27 @@
             <tbody>
             <tr th:each="produto : ${produtos}">
                 <td>
-                    <img th:if="${produto.base64Image != null}"
-                         th:src="'data:image/jpeg;base64,' + ${produto.base64Image}"
-                         alt="Imagem Principal" class="img-fluid" width="50">
+                    <a href="#" data-toggle="modal" data-target="#imagemModal-${produto.idProduto}">
+                        <img th:if="${produto.base64Image != null}"
+                             th:src="'data:image/jpeg;base64,' + ${produto.base64Image}"
+                             alt="Imagem Principal" class="img-fluid" width="50">
+                    </a>
+                    <!-- Modal para mostrar a imagem maior -->
+                    <div class="modal fade" th:id="'imagemModal-' + ${produto.idProduto}" tabindex="-1" role="dialog" aria-labelledby="imagemModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="imagemModalLabel">Imagem do Produto</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <img th:src="'data:image/jpeg;base64,' + ${produto.base64Image}" class="img-fluid">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </td>
                 <td th:text="${produto.idProduto}"></td>
                 <td th:text="${produto.nome}"></td>
@@ -60,19 +79,27 @@
         </table>
     </div>
 
+    <!-- Paginação -->
     <ul class="pagination">
-        <li th:if="${paginaAtual > 0}" class="page-item">
-            <a th:href="@{/listarProd(pagina=${paginaAtual - 1})}" class="page-link">« Anterior</a>
+        <li class="page-item" th:classappend="${paginaAtual == 0} ? 'disabled'">
+            <a class="page-link" th:href="@{/listarProd(pagina=${paginaAtual - 1}, nome=${param.nome})}" aria-label="Anterior">
+                <span aria-hidden="true">« Anterior</span>
+            </a>
         </li>
-        <li th:each="i : ${#numbers.sequence(0, totalPaginas - 1)}" th:classappend="${i == paginaAtual ? 'active' : ''}" class="page-item">
-            <a th:href="@{/listarProd(pagina=${i})}" th:text="${i + 1}" class="page-link"></a>
+        <li th:each="i : ${#numbers.sequence(0, totalPaginas - 1)}" class="page-item" th:classappend="${i == paginaAtual} ? 'active'">
+            <a class="page-link" th:href="@{/listarProd(pagina=${i}, nome=${param.nome})}" th:text="${i + 1}"></a>
         </li>
-        <li th:if="${paginaAtual < totalPaginas - 1}" class="page-item">
-            <a th:href="@{/listarProd(pagina=${paginaAtual + 1})}" class="page-link">Próximo »</a>
+        <li class="page-item" th:classappend="${paginaAtual >= totalPaginas - 1} ? 'disabled'">
+            <a class="page-link" th:href="@{/listarProd(pagina=${paginaAtual + 1}, nome=${param.nome})}" aria-label="Próximo">
+                <span aria-hidden="true">Próximo »</span>
+            </a>
         </li>
     </ul>
 
     <a href="/backoffice" class="btn btn-secondary mt-3">Voltar ao Menu Principal</a>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

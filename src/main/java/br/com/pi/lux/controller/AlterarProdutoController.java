@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +33,15 @@ public class AlterarProdutoController {
         Optional<Produto> produtoOptional = repository.findById(idProduto);
         if (produtoOptional.isPresent()) {
             Produto produto = produtoOptional.get();
+
+            // Converter imagens para Base64
+            produto.getImagens().forEach(imagem -> {
+                if (imagem.getImagem() != null) {
+                    String base64 = Base64.getEncoder().encodeToString(imagem.getImagem());
+                    imagem.setImagemBase64(base64);
+                }
+            });
+
             model.addAttribute("produto", produto);
 
             // Verifica o papel do usuário
@@ -119,6 +129,9 @@ public class AlterarProdutoController {
                             listaImagens.add(produtoImagem);
                         } catch (IOException e) {
                             e.printStackTrace();
+                            model.addAttribute("mensagem", "Erro ao processar as imagens.");
+                            model.addAttribute("produto", produto);
+                            return "alterarProd";
                         }
                     }
                 }

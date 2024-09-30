@@ -1,0 +1,57 @@
+body {
+    background-color: #f8f9fa; /* Cor de fundo leve */
+}
+
+h1 {
+    color: #004d40; /* Cor principal para o título */
+}
+
+.price {
+    font-size: 24px; /* Aumenta o tamanho da fonte do preço */
+    font-weight: bold; /* Deixa o texto em negrito */
+    color: #004d40; /* Cor principal para o preço */
+}
+
+.image-list {
+    max-height: 50px;
+    max-height: 300px; /* Define uma altura máxima menor para as imagens */
+    overflow-y: auto; /* Permite rolagem se as imagens excederem a altura */
+    border: 3px solid #004d40; /* Borda verde mais grossa */
+    border-radius: 15px; /* Bordas mais arredondadas */
+    padding: 2px; /* Espaçamento interno menor */
+    background-color: #ffffff; /* Cor de fundo branca */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombreamento */
+}
+
+
+.additional-image {
+    width: 30%; /* Ajusta a largura das imagens para 60% */
+    height: auto; /* Mantém a proporção das imagens */
+    margin-bottom: 10px; /* Espaçamento entre as imagens */
+    display: block; /* Garante que as imagens se comportem como blocos */
+    margin-left: auto; /* Centraliza as imagens */
+    margin-right: auto; /* Centraliza as imagens */
+}
+
+.carousel-inner img {
+    max-height: 400px; /* Define a altura máxima da imagem principal */
+    object-fit: cover; /* Corta a imagem para caber na área do carrossel */
+}
+
+.btn-primary {
+    background-color: #004d40; /* Cor principal para o botão de compra */
+    border: none; /* Remove a borda */
+}
+
+.btn-primary:hover {
+    background-color: #003d36; /* Cor do botão ao passar o mouse */
+}
+
+.btn-secondary {
+    background-color: #e9ecef; /* Cor de fundo do botão secundário */
+    color: #004d40; /* Cor do texto do botão secundário */
+}
+
+.btn-secondary:hover {
+    background-color: #d6d9db; /* Cor do botão secundário ao passar o mouse */
+}

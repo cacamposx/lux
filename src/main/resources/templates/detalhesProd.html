@@ -1,21 +1,29 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalhes do Produto</title>
+    <link rel="stylesheet" href="/css/detalhesProd.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
 <div class="container mt-5">
-    <h1 th:text="${produto.nome}"></h1>
+    <h1 th:text="${produto.nome}" class="text-center">Nome do Produto</h1>
     <div class="row">
+        <div class="col-md-6 image-list">
+
+            <div th:each="imagem : ${produto.imagens}">
+                <img th:src="|data:image/jpeg;base64,${imagem.imagemBase64}|"
+                     alt="Imagem Adicional" class="additional-image">
+            </div>
+        </div>
         <div class="col-md-6">
             <div id="carouselProduto" class="carousel slide" data-ride="carousel">
                 <div class="carousel-inner">
                     <div th:each="imagem, iterStat : ${produto.imagens}"
                          th:classappend="${iterStat.first} ? 'carousel-item active' : 'carousel-item'">
-                        <img th:src="'data:image/jpeg;base64,' + ${#strings.bytesToBase64(imagem.imagem)}"
+                        <img th:src="|data:image/jpeg;base64,${imagem.imagemBase64}|"
                              class="d-block w-100"
                              alt="Imagem Produto">
                     </div>
@@ -30,11 +38,13 @@
                 </a>
             </div>
         </div>
+    </div>
+    <div class="row mt-4">
         <div class="col-md-6">
-            <h3>Preço: R$ <span th:text="${produto.preco}"></span></h3>
-            <p th:text="${produto.descricao}"></p>
-            <p>Avaliação: <span th:text="${produto.avaliacao}"></span></p>
-            <p>Status: <span th:text="${produto.status ? 'Ativo' : 'Inativo'}"></span></p>
+            <h3 class="price">Preço: R$ <span th:text="${produto.preco}">0.00</span></h3>
+            <p th:text="${produto.descricao}">Descrição do Produto</p>
+            <p>Avaliação: <span th:text="${produto.avaliacao}">0.0</span></p>
+            <p>Status: <span th:text="${produto.status ? 'Ativo' : 'Inativo'}">Inativo</span></p>
             <button class="btn btn-primary" disabled>Comprar</button>
             <a href="/listarProd" class="btn btn-secondary">Voltar</a>
         </div>

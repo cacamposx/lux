@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,11 +43,14 @@
 
 <div>
     <h2>Imagens Atuais</h2>
-    <div th:each="imagem : ${produto.imagens}">
-        <img th:src="'data:image/jpeg;base64,' + ${#strings.bytesToBase64(imagem.imagem)}"
-             alt="Imagem Produto"
-             width="100">
-        <span th:text="${imagem.principal} ? 'Principal' : ''"></span>
+    <div th:each="imagem, iterStat : ${produto.imagens}">
+        <div style="display: inline-block; margin: 10px;">
+            <img th:if="${imagem.imagemBase64 != null}"
+                 th:src="|data:image/jpeg;base64,${imagem.imagemBase64}|"
+                 alt="Imagem Produto"
+                 width="100">
+            <div th:text="${imagem.principal} ? 'Principal' : ''"></div>
+        </div>
     </div>
 </div>
 

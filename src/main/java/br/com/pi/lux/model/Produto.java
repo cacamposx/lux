@@ -37,14 +37,13 @@ public class Produto {
     @Column(nullable = false)
     private LocalDateTime data;
 
+    @Transient
     private String base64Image;
 
     @PrePersist
     protected void onCreate() {
         this.data = LocalDateTime.now();
     }
-    @Lob
-    private byte[] imagemPrincipal; // Armazenando a imagem como byte[]
 
     // Construtores
     public Produto() {
@@ -136,23 +135,17 @@ public class Produto {
         this.imagens = imagens;
     }
 
-
-    // Método para obter a imagem principal
-    public ProdutoImagem getImagemPrincipal() {
-        return imagens.stream().filter(ProdutoImagem::isPrincipal).findFirst().orElse(null);
-    }
-
-
-    public void setImagemPrincipal(byte[] imagemPrincipal) {
-        this.imagemPrincipal = imagemPrincipal;
-    }
-
     public String getBase64Image() {
         return base64Image;
     }
 
     public void setBase64Image(String base64Image) {
         this.base64Image = base64Image;
+    }
+
+    // Método para obter a imagem principal
+    public ProdutoImagem getImagemPrincipal() {
+        return imagens.stream().filter(ProdutoImagem::isPrincipal).findFirst().orElse(null);
     }
 
 }

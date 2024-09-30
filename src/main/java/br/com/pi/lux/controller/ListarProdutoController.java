@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import br.com.pi.lux.model.Produto;
+import br.com.pi.lux.model.ProdutoImagem;
 import br.com.pi.lux.repository.ProdutoRepository;
 
 import java.util.Base64;
@@ -41,8 +42,11 @@ public class ListarProdutoController {
         // Adicionando a imagem codificada em Base64
         produtosPage.getContent().forEach(produto -> {
             if (produto.getImagens() != null && !produto.getImagens().isEmpty()) {
-                String base64Image = Base64.getEncoder().encodeToString(produto.getImagens().get(0).getImagem());
-                produto.setBase64Image(base64Image); // Assegure-se de ter este método na sua classe Produto
+                ProdutoImagem imagemPrincipal = produto.getImagemPrincipal();
+                if (imagemPrincipal != null && imagemPrincipal.getImagem() != null) {
+                    String base64Image = Base64.getEncoder().encodeToString(imagemPrincipal.getImagem());
+                    produto.setBase64Image(base64Image);
+                }
             }
         });
 
