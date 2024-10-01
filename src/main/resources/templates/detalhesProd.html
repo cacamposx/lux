@@ -45,7 +45,13 @@
             <p th:text="${produto.descricao}">Descrição do Produto</p>
             <p>Avaliação: <span th:text="${produto.avaliacao}">0.0</span></p>
             <p>Status: <span th:text="${produto.status ? 'Ativo' : 'Inativo'}">Inativo</span></p>
-            <button class="btn btn-primary" disabled>Comprar</button>
+
+            <form th:action="@{/adicionarCarrinho}" method="post">
+                <input type="hidden" name="id" th:value="${produto.idProduto}"/>
+                <input type="number" name="quantidade" value="1" min="1" class="form-control" required/>
+                <button type="submit" class="btn btn-primary">Comprar</button>
+            </form>
+
             <a href="/listarProd" class="btn btn-secondary">Voltar</a>
         </div>
     </div>

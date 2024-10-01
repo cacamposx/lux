@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Carrinho de Compras</title>
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Carrinho de Compras</h1>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Nome do Produto</th>
+            <th>Quantidade</th>
+            <th>Preço</th>
+            <th>Total</th>
+            <th>Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${carrinho}">
+            <td th:text="${item.produto.nome}">Nome do Produto</td>
+            <td>
+                <form th:action="@{/atualizarQuantidade}" method="post">
+                    <input type="hidden" name="id" th:value="${item.produto.idProduto}"/>
+                    <input type="number" name="quantidade" th:value="${item.quantidade}" min="1" class="form-control" required/>
+                    <button type="submit" class="btn btn-primary">Atualizar</button>
+                </form>
+            </td>
+            <td th:text="${item.produto.preco}">0.00</td>
+            <td th:text="${item.produto.preco * item.quantidade}">0.00</td>
+            <td>
+                <form th:action="@{/removerCarrinho}" method="post">
+                    <input type="hidden" name="id" th:value="${item.produto.idProduto}"/>
+                    <button type="submit" class="btn btn-danger">Remover</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div>
+        <label for="frete">Escolha o frete:</label>
+        <select id="frete" name="frete" form="carrinhoForm" th:onchange="this.form.submit()">
+            <option value="5.00" th:selected="${frete == 5.00}">Frete Econômico - R$ 5,00</option>
+            <option value="10.00" th:selected="${frete == 10.00}">Frete Padrão - R$ 10,00</option>
+            <option value="20.00" th:selected="${frete == 20.00}">Frete Expresso - R$ 20,00</option>
+        </select>
+    </div>
+
+    <form id="carrinhoForm" th:action="@{/carrinho/frete}" method="post"></form>
+
+    <div>
+        <h3>Total: R$ <span th:text="${totalCarrinho + frete}">0.00</span></h3>
+    </div>
+
+    <div>
+        <a href="/homeEcommerce" class="btn btn-secondary">Continuar Comprando</a>
+    </div>
+</div>
+</body>
+</html>

@@ -13,4 +13,5 @@ import java.util.Optional;
 public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
     List<Produto> findAllByOrderByDataDesc();
     Page<Produto> findByNomeContainingIgnoreCase(String nome, Pageable pageable);
+    List<Produto> findByNomeContainingIgnoreCase(String nome);
 }

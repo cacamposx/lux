@@ -18,6 +18,37 @@ public class AlterarUsuarioController {
     @Autowired
     private UsuarioRepository repository;
 
+    // Método para validar CPF
+    private boolean isValidCPF(String cpf) {
+        String cpfLimpo = cpf.replaceAll("[^\\d]", "");
+
+        if (cpfLimpo.length() != 11 || cpfLimpo.matches("^(\\d)\\1{10}$")) {
+            return false;
+        }
+
+        int soma = 0;
+        int peso = 10;
+
+        for (int i = 0; i < 9; i++) {
+            soma += Character.getNumericValue(cpfLimpo.charAt(i)) * peso--;
+        }
+
+        int digito1 = 11 - (soma % 11);
+        digito1 = digito1 > 9 ? 0 : digito1;
+
+        soma = 0;
+        peso = 11;
+
+        for (int i = 0; i < 10; i++) {
+            soma += Character.getNumericValue(cpfLimpo.charAt(i)) * peso--;
+        }
+
+        int digito2 = 11 - (soma % 11);
+        digito2 = digito2 > 9 ? 0 : digito2;
+
+        return cpfLimpo.charAt(9) == (char) (digito1 + '0') && cpfLimpo.charAt(10) == (char) (digito2 + '0');
+    }
+
     @GetMapping("/alterarUsu")
     public String mostrarFormularioAlteracao(@RequestParam("idUsuario") int idUsuario, Model model) {
         Optional<Usuario> usuarioOptional = repository.findById(idUsuario);
@@ -41,7 +72,20 @@ public class AlterarUsuarioController {
 
         // Verifica se as senhas coincidem
         if (!senha.equals(confirmaSenha)) {
+            // Criação do objeto Usuario com o construtor correto
             model.addAttribute("mensagem", "As senhas não coincidem!");
+            model.addAttribute("usuario", new Usuario(idUsuario, nome, cpf, senha, grupo, "", true));
+            return "alterarUsu";
+        }
+
+        // Remove caracteres não numéricos do CPF
+        String cpfLimpo = cpf.replaceAll("[^\\d]", "");
+
+        // Valida o CPF
+        if (!isValidCPF(cpfLimpo)) {
+            // Criação do objeto Usuario com o construtor correto
+            model.addAttribute("mensagem", "CPF inválido!");
+            model.addAttribute("usuario", new Usuario(idUsuario, nome, cpf, senha, grupo, "", true));
             return "alterarUsu";
         }
 
@@ -49,7 +93,7 @@ public class AlterarUsuarioController {
         if (usuarioOptional.isPresent()) {
             Usuario usuario = usuarioOptional.get();
             usuario.setNome(nome);
-            usuario.setCpf(cpf.replaceAll("[^\\d]", "")); // Remove caracteres não numéricos
+            usuario.setCpf(cpfLimpo);
             usuario.setGrupo(grupo);
 
             // Atualiza a senha encriptada
