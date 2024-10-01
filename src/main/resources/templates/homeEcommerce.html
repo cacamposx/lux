@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Ecommerce</title>
+    <link rel="stylesheet" href="/css/homeEcommerce.css">
+</head>
+<body>
+<div class="aviso">
+    <div class="comunicado">Entrega no mesmo dia e dia seguinte para Grande São Paulo!</div>
+</div>
+
+<div class="cabecalho">
+    <div>
+        <div class="acoes">
+            <a href="/homeEcommerce"><img src="/img/usuario.png" alt=""></a>
+            <a href="/homeEcommerce"><img src="/img/desejos.png" alt=""></a>
+            <a href="/homeEcommerce"><img src="/img/sacola.png" alt=""></a>
+        </div>
+
+        <div class="logo">
+            <img src="/img/" alt="" onclick="/homeEcommerce">
+        </div>
+
+        <div class="acoes">
+            <a href="/homeEcommerce"><img src="/img/lupa.png" alt=""></a>
+            <a href="/homeEcommerce"><img src="/img/perfil.png" alt=""></a>
+            <a href="/homeEcommerce"><img src="/img/sacola.png" alt=""></a>
+        </div>
+    </div>
+
+    <div>
+        <div class="opcoes">
+            <a href="/homeEcommerce"><buttom class="btn">INÍCIO</buttom></a>
+            <a href="/homeEcommerce"><buttom class="btn">MENU</buttom></a>
+            <a href="/homeEcommerce"><buttom class="btn">SOBRE</buttom></a>
+            <a href="/homeEcommerce"><buttom class="btn">CONTATO</buttom></a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="subtitulo">Lançamentos</div>
+    <div class="listaProduto">
+        <th:block th:each="produto : ${produtos}">
+            <div class="itemProduto">
+                <h3 th:text="${produto.nome}">Nome do Produto</h3>
+                <img th:src="@{${produto.base64Image}}" alt="Imagem do Produto" />
+                <p th:text="${produto.descricao}">Descrição do Produto</p>
+                <p>Preço: R$ <span th:text="${produto.preco}">0.00</span></p>
+                <a th:href="@{/detalhesProd(idProduto=${produto.idProduto})}">Ver Detalhes</a>
+            </div>
+        </th:block>
+    </div>
+</div>
+
+</body>
+</html>
