@@ -1,15 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Home Page</title>
+    <link rel="stylesheet" href="/css/homePage.css">
 </head>
 <body>
-    <div class="titulo">Seja bem-vindo!</div>
+    <img th:src="@{/imagens/desejos.png}" alt="Logo">
+    
+    <div class="titulo">
+        <h1>Seja bem-vindo!</h1>
+    </div>
 
     <div class="subtitulo">Como posso ajudá-lo hoje?</div>
 
-    <a href="/login">Ambiente Corporativo: Profissional e Estruturado</a>
-    <a href="/homeEcommerce">Ambiente de E-commerce: Dinâmico e Inovador</a>
+    <a th:href="@{/login}">Ambiente Corporativo: Profissional e Estruturado</a>
+    <a th:href="@{/homeEcommerce}">Ambiente de E-commerce: Dinâmico e Inovador</a>
 </body>
 </html>

@@ -1,0 +1,56 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+    background-color: #f9f9f9;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.titulo {
+    font-size: 2em;
+    margin: 20px 0;
+    color: #333;
+}
+
+.subtitulo {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+    color: #666;
+}
+
+a {
+    display: inline-block;
+    margin: 10px 0;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: white;
+    background-color: #4CD3BD; /* Cor atualizada */
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+a:hover {
+    background-color: #3AB6A1; /* Cor um pouco mais escura para hover */
+}
+
+/* Estilos responsivos */
+@media (max-width: 600px) {
+    .titulo {
+        font-size: 1.5em;
+    }
+
+    .subtitulo {
+        font-size: 1em;
+    }
+
+    a {
+        padding: 8px 15px;
+        font-size: 0.9em;
+    }
+}
