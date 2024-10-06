@@ -52,7 +52,7 @@
                 <th:block th:each="produto : ${produtos}">
                     <div class="itemProduto">
                         <h3 th:text="${produto.nome}">Nome do Produto</h3>
-                        <img th:src="@{${produto.base64Image}}" alt="Imagem do Produto" />
+                        <img th:src="'data:image/jpeg;base64,' + ${produto.base64Image}" />
                         <p th:text="${produto.descricao}">Descrição do Produto</p>
                         <p>Preço: R$ <span th:text="${produto.preco}">0.00</span></p>
                         <a th:href="@{/detalhesProd(idProduto=${produto.idProduto})}">Ver Detalhes</a>
