@@ -1,6 +1,6 @@
 body {
     margin: 0;
-    background-color: #f0f0f0;
+    background-color: #D8DEDC;
 }
 
 .aviso {
@@ -60,4 +60,18 @@ body {
 .pagination a:hover {
     background-color: #007bff;
     color: white;
+}
+
+.iconNav {
+    height: auto;
+    width: 50px;
+}
+
+.logoNav {
+    height: auto;
+    width: 100px;
+}
+
+.cabecalho {
+    background-color: #BBC1BF;;
 }

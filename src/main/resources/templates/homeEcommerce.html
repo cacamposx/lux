@@ -13,9 +13,9 @@
         </div>
 
         <div class="cabecalho">
-            <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <nav class="navbar navbar-expand-lg">
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="/homeEcommerce">INÍCIO</a>
+                    <a class="navbar-brand" href="/homeEcommerce"><img class="logoNav" th:src="@{/imagens/logoLux.png}" alt="logoLux"> </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
@@ -35,9 +35,9 @@
                             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                             <button class="btn btn-outline-success" type="submit">Search</button>
                         </form>
-                        <a href="/homeEcommerce">   <img th:src="@{/imagens/usuario.png}" alt="perfil"></a>
-                        <a href="/homeEcommerce">   <img th:src="@{/imagens/desejos.png}" alt="favoritos"></a>
-                        <a href="/homeEcommerce">   <img th:src="@{/imagens/sacola.png}" alt="sacola"></a>
+                        <a th:href="loginCliente">   <img class="iconNav" th:src="@{/imagens/usuario.png}" alt="perfil"></a>
+                        <a href="/homeEcommerce">   <img class="iconNav" th:src="@{/imagens/desejos.png}" alt="favoritos"></a>
+                        <a th:href="carrinho">   <img class="iconNav" th:src="@{/imagens/sacola.png}" alt="sacola"></a>
                     </div>
                 </div>
             </nav>

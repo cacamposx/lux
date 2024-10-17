@@ -10,32 +10,34 @@
     </div>
 
     <div class="cabecalho">
-        <div>
-            <div class="acoes">
-                <a href="/homeEcommerce"><img src="/img/usuario.png" alt=""></a>
-                <a href="/homeEcommerce"><img src="/img/desejos.png" alt=""></a>
-                <a href="/homeEcommerce"><img src="/img/sacola.png" alt=""></a>
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/homeEcommerce"><img class="logoNav" th:src="@{/imagens/logoLux.png}" alt="logoLux"> </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/homeEcommerce">MENU</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/homeEcommerce">SOBRE</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/homeEcommerce">CONTATO</a>
+                        </li>
+                    </ul>
+                    <form class="d-flex" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                    <a th:href="login">   <img class="iconNav" th:src="@{/imagens/usuario.png}" alt="perfil"></a>
+                    <a href="/homeEcommerce">   <img class="iconNav" th:src="@{/imagens/desejos.png}" alt="favoritos"></a>
+                    <a th:href="carrinho">   <img class="iconNav" th:src="@{/imagens/sacola.png}" alt="sacola"></a>
+                </div>
             </div>
-
-            <div class="logo">
-                <img src="/img/" alt="" onclick="/homeEcommerce">
-            </div>
-
-            <div class="acoes">
-                <a href="/homeEcommerce"><img src="/img/lupa.png" alt=""></a>
-                <a href="/homeEcommerce"><img src="/img/perfil.png" alt=""></a>
-                <a href="/homeEcommerce"><img src="/img/sacola.png" alt=""></a>
-            </div>
-        </div>
-
-        <div>
-            <div class="opcoes">
-                <a href="/homeEcommerce"><buttom class="btn">INÍCIO</buttom></a>
-                <a href="/homeEcommerce"><buttom class="btn">MENU</buttom></a>
-                <a href="/homeEcommerce"><buttom class="btn">SOBRE</buttom></a>
-                <a href="/homeEcommerce"><buttom class="btn">CONTATO</buttom></a>
-            </div>
-        </div>
+        </nav>
     </div>
 
 </body>
