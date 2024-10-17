@@ -3,6 +3,7 @@ package br.com.pi.lux.controller;
 import br.com.pi.lux.model.Cliente;
 import br.com.pi.lux.model.Endereco;
 import br.com.pi.lux.repository.ClienteRepository;
+import br.com.pi.lux.service.CepService;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,9 @@ public class CadastrarClienteController {
 
     @Autowired
     private ClienteRepository clienteRepository;
+
+    @Autowired
+    private CepService cepService;
 
     @GetMapping("/cadastrarCliente")
     public String mostrarFormularioCadastro(Model model) {
@@ -43,6 +47,16 @@ public class CadastrarClienteController {
 
         if (!isValidCPF(cliente.getCpf())) {
             model.addAttribute("mensagem", "CPF inválido!");
+            return "cadastrarCliente";
+        }
+
+        if (!isValidNome(cliente.getNome())) {
+            model.addAttribute("mensagem", "O nome deve conter no mínimo duas palavras e cada palavra deve ter pelo menos três letras!");
+            return "cadastrarCliente";
+        }
+
+        if (!cepService.isValidCep(cliente.getEnderecoFaturamento().getCep())) {
+            model.addAttribute("mensagem", "CEP inválido!");
             return "cadastrarCliente";
         }
 
@@ -72,7 +86,7 @@ public class CadastrarClienteController {
         clienteRepository.save(cliente);
 
         model.addAttribute("mensagem", "Cliente cadastrado com sucesso!");
-        return "redirect:/login";
+        return "redirect:/loginCliente";
     }
 
     private boolean isValidCPF(String cpf) {
@@ -103,6 +117,19 @@ public class CadastrarClienteController {
         digito2 = digito2 > 9 ? 0 : digito2;
 
         return cpfLimpo.charAt(9) == (char) (digito1 + '0') && cpfLimpo.charAt(10) == (char) (digito2 + '0');
+    }
+
+    private boolean isValidNome(String nome) {
+        String[] palavras = nome.trim().split("\\s+");
+        if (palavras.length < 2) {
+            return false;
+        }
+        for (String palavra : palavras) {
+            if (palavra.length() < 3) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 
