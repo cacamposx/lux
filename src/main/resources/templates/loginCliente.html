@@ -1,23 +1,29 @@
 <!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta charset="UTF-8">
-        <title>Login</title>
-    </head>
-    <body>
-        <div class="titulo">LOGIN</div>
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+<div class="titulo">LOGIN</div>
 
-        <div class="erro">
-            <p th:text="${mensagem}"></p>
-        </div>
+<div class="erro">
+    <p th:text="${mensagem}"></p>
+</div>
 
-        <a> <img th:href="logoLux"> </a>
-        <form action="/loginCliente" method="post">
-            <input type="text" name="email" placeholder="E-mail" required>
-            <input type="password" name="senha" placeholder="Senha" required>
-            <button type="submit">Login</button>
-            <a>A</a>
-            <a th:href="cadastrarCliente"> Criar nova conta</a>
-    </form>
-    </body>
+<!-- Link correto para a logo -->
+<a href="/">
+    <img src="logoLux.png" alt="Logo Lux">
+</a>
+
+<!-- Formulário de login -->
+<form action="/loginCliente" method="post">
+    <input type="text" name="email" placeholder="E-mail" required>
+    <input type="password" name="senha" placeholder="Senha" required>
+    <button type="submit">Login</button>
+</form>
+
+<!-- Link para criar uma nova conta -->
+<a th:href="@{/cadastrarCliente}">Criar nova conta</a>
+</body>
 </html>
