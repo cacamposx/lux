@@ -7,11 +7,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class CarrinhoController {
@@ -89,30 +88,39 @@ public class CarrinhoController {
         return "redirect:/carrinho";
     }
 
-    @PostMapping("/removerCarrinho")
-    public String removerCarrinho(@RequestParam("id") Integer id, RedirectAttributes redirectAttributes) {
-        carrinho.removeIf(item -> item.getProduto().getIdProduto() == id);
-        redirectAttributes.addFlashAttribute("mensagem", "Produto removido do carrinho com sucesso!");
-
-        return "redirect:/carrinho";
-    }
-
     @PostMapping("/atualizarQuantidade")
-    public String atualizarQuantidade(@RequestParam("id") Integer id,
-                                      @RequestParam("quantidade") int quantidade,
-                                      RedirectAttributes redirectAttributes) {
+    public @ResponseBody Map<String, Object> atualizarQuantidade(@RequestParam("id") Integer id,
+                                                                 @RequestParam("quantidade") int quantidade) {
         Optional<ItemCarrinho> itemCarrinho = carrinho.stream()
                 .filter(item -> item.getProduto().getIdProduto() == id)
                 .findFirst();
 
+        Map<String, Object> response = new HashMap<>();
         if (itemCarrinho.isPresent()) {
             itemCarrinho.get().setQuantidade(quantidade);
-            redirectAttributes.addFlashAttribute("mensagem", "Quantidade atualizada com sucesso!");
+            double subtotal = itemCarrinho.get().getProduto().getPreco() * quantidade;
+            double totalCarrinho = carrinho.stream()
+                    .mapToDouble(item -> item.getProduto().getPreco() * item.getQuantidade())
+                    .sum();
+            response.put("subtotal", subtotal);
+            response.put("total", totalCarrinho + frete);
         } else {
-            redirectAttributes.addFlashAttribute("mensagemErro", "Produto não encontrado no carrinho!");
+            response.put("error", "Produto não encontrado no carrinho!");
         }
 
-        return "redirect:/carrinho";
+        return response;
+    }
+
+    @PostMapping("/removerCarrinho")
+    public @ResponseBody Map<String, Object> removerCarrinho(@RequestParam("id") Integer id) {
+        carrinho.removeIf(item -> item.getProduto().getIdProduto() == id);
+        double totalCarrinho = carrinho.stream()
+                .mapToDouble(item -> item.getProduto().getPreco() * item.getQuantidade())
+                .sum();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("total", totalCarrinho + frete);
+        return response;
     }
 
 }

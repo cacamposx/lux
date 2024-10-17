@@ -14,24 +14,23 @@
             <th>Nome do Produto</th>
             <th>Quantidade</th>
             <th>Preço</th>
-            <th>Total</th>
+            <th>Subtotal</th>
             <th>Ações</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="item : ${carrinho}">
+        <tr th:each="item : ${carrinho}" id="item-row-${item.produto.idProduto}">
             <td th:text="${item.produto.nome}">Nome do Produto</td>
             <td>
-                <form th:action="@{/atualizarQuantidade}" method="post">
+                <form th:action="@{/atualizarQuantidade}" method="post" class="update-quantity-form">
                     <input type="hidden" name="id" th:value="${item.produto.idProduto}"/>
-                    <input type="number" name="quantidade" th:value="${item.quantidade}" min="1" class="form-control" required/>
-                    <button type="submit" class="btn btn-primary">Atualizar</button>
+                    <input type="number" name="quantidade" th:value="${item.quantidade}" min="1" class="form-control quantity-input" required/>
                 </form>
             </td>
             <td th:text="${item.produto.preco}">0.00</td>
-            <td th:text="${item.produto.preco * item.quantidade}">0.00</td>
+            <td id="subtotal-${item.produto.idProduto}" th:text="${item.produto.preco * item.quantidade}">0.00</td>
             <td>
-                <form th:action="@{/removerCarrinho}" method="post">
+                <form th:action="@{/removerCarrinho}" method="post" class="remove-item-form">
                     <input type="hidden" name="id" th:value="${item.produto.idProduto}"/>
                     <button type="submit" class="btn btn-danger">Remover</button>
                 </form>
@@ -52,12 +51,52 @@
     <form id="carrinhoForm" th:action="@{/carrinho/frete}" method="post"></form>
 
     <div>
-        <h3>Total: R$ <span th:text="${totalCarrinho + frete}">0.00</span></h3>
+        <h3>Total: R$ <span id="total" th:text="${totalCarrinho + frete}">0.00</span></h3>
     </div>
 
     <div>
         <a th:href="homeEcommerce" class="btn btn-secondary">Continuar Comprando</a>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const quantityInputs = document.querySelectorAll('.quantity-input');
+        const removeForms = document.querySelectorAll('.remove-item-form');
+
+        quantityInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                const form = input.closest('.update-quantity-form');
+                const formData = new FormData(form);
+
+                fetch('/atualizarQuantidade', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        location.reload(); // Recarrega a página após a atualização
+                    });
+            });
+        });
+
+        removeForms.forEach(form => {
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const formData = new FormData(form);
+
+                fetch('/removerCarrinho', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById(`item-row-${formData.get('id')}`).remove();
+                        document.getElementById('total').innerText = data.total;
+                    });
+            });
+        });
+    });
+</script>
 </body>
 </html>
