@@ -10,7 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class AlterarClienteController {
@@ -53,7 +55,9 @@ public class AlterarClienteController {
     public String mostrarFormularioAlteracao(Model model, HttpSession session) {
         Cliente cliente = (Cliente) session.getAttribute("cliente");
         if (cliente != null) {
+            List<Endereco> enderecosEntrega = cliente.getEnderecosEntrega() != null ? cliente.getEnderecosEntrega() : new ArrayList<>();
             model.addAttribute("cliente", cliente);
+            model.addAttribute("enderecosEntrega", enderecosEntrega);
             return "alterarCliente";
         }
         model.addAttribute("mensagem", "Sessão expirada. Faça login novamente.");
@@ -97,27 +101,28 @@ public class AlterarClienteController {
             return "alterarCliente";
         }
 
-        // Atualiza a senha se foi alterada
+        // Atualiza os dados do cliente
+        clienteExistente.setNome(cliente.getNome());
+        clienteExistente.setEmail(cliente.getEmail());
+        clienteExistente.setCpf(cliente.getCpf());
+        clienteExistente.setDataNascimento(cliente.getDataNascimento());
+
+        // Atualiza a senha se fornecida
         if (!senha.isEmpty()) {
             clienteExistente.setSenha(BCrypt.hashpw(senha, BCrypt.gensalt()));
         }
 
-        // Atualiza outros campos do cliente
-        clienteExistente.setNome(cliente.getNome());
-        clienteExistente.setEmail(cliente.getEmail());
-        clienteExistente.setDataNascimento(cliente.getDataNascimento());
-        clienteExistente.setGenero(cliente.getGenero());
-        clienteExistente.setCpf(cpfLimpo);
+        // Processa a lista de endereços
+        List<Endereco> enderecosEntrega = cliente.getEnderecosEntrega() != null ? cliente.getEnderecosEntrega().stream()
+                .filter(endereco -> endereco.getLogradouro() != null && !endereco.getLogradouro().isEmpty())
+                .collect(Collectors.toList()) : new ArrayList<>();
 
-        // Atualiza os endereços de entrega e faturamento
-        clienteExistente.setEnderecoFaturamento(cliente.getEnderecoFaturamento());
-        clienteExistente.setEnderecosEntrega(cliente.getEnderecosEntrega());
-
-        // Salva no banco de dados
+        clienteExistente.setEnderecosEntrega(enderecosEntrega);
         clienteRepository.save(clienteExistente);
 
-        model.addAttribute("mensagem", "Dados alterados com sucesso!");
-        return "redirect:/perfil";
+        session.setAttribute("cliente", clienteExistente);
+        model.addAttribute("mensagem", "Informações do cliente atualizadas com sucesso!");
+        model.addAttribute("cliente", clienteExistente);
+        return "alterarCliente";
     }
-
 }

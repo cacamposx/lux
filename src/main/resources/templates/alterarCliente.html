@@ -4,44 +4,68 @@
     <meta charset="UTF-8">
     <title>Alterar Informações do Cliente</title>
     <link rel="stylesheet" href="/css/styles.css">
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("addEndereco").addEventListener("click", function() {
+                adicionarEndereco();
+            });
+        });
+
+        function adicionarEndereco() {
+            const container = document.getElementById("enderecosContainer");
+            const index = container.children.length; // Obtém o índice atual
+
+            const novoEndereco = `
+                <div>
+                    <input type="text" name="enderecosEntrega[${index}].logradouro" placeholder="Logradouro" required>
+                    <input type="text" name="enderecosEntrega[${index}].numero" placeholder="Número" required>
+                    <input type="text" name="enderecosEntrega[${index}].complemento" placeholder="Complemento">
+                    <input type="text" name="enderecosEntrega[${index}].bairro" placeholder="Bairro" required>
+                    <input type="text" name="enderecosEntrega[${index}].cidade" placeholder="Cidade" required>
+                    <input type="text" name="enderecosEntrega[${index}].uf" placeholder="Estado" required>
+                    <button type="button" onclick="removerEndereco(this)">Remover</button>
+                </div>
+            `;
+
+            container.insertAdjacentHTML('beforeend', novoEndereco);
+        }
+
+        function removerEndereco(button) {
+            button.parentElement.remove();
+        }
+    </script>
 </head>
 <body>
 
 <h2>Alterar Informações do Cliente</h2>
 
-<!-- Exibe mensagens de erro ou sucesso -->
 <div th:if="${mensagem}" class="alert">
     <p th:text="${mensagem}"></p>
 </div>
 
-<!-- Formulário para alteração dos dados do cliente -->
 <form th:action="@{/alterarCliente}" method="post" th:object="${cliente}">
     <div>
         <label for="nome">Nome:</label>
         <input type="text" id="nome" name="nome" th:value="*{nome}" required>
     </div>
-
     <div>
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" th:value="*{email}" required>
     </div>
-
     <div>
         <label for="cpf">CPF:</label>
         <input type="text" id="cpf" name="cpf" th:value="*{cpf}" required>
     </div>
-
     <div>
         <label for="dataNascimento">Data de Nascimento:</label>
         <input type="date" id="dataNascimento" name="dataNascimento" th:value="*{dataNascimento}" required>
     </div>
-
     <div>
         <label for="genero">Gênero:</label>
-        <select id="genero" name="genero">
-            <option th:selected="*{genero == 'Masculino'}" value="Masculino">Masculino</option>
-            <option th:selected="*{genero == 'Feminino'}" value="Feminino">Feminino</option>
-            <option th:selected="*{genero == 'Outro'}" value="Outro">Outro</option>
+        <select id="genero" name="genero" th:value="*{genero}">
+            <option value="Masculino" th:selected="*{genero == 'Masculino'}">Masculino</option>
+            <option value="Feminino" th:selected="*{genero == 'Feminino'}">Feminino</option>
+            <option value="Outro" th:selected="*{genero == 'Outro'}">Outro</option>
         </select>
     </div>
 
@@ -56,55 +80,21 @@
     </div>
 
     <h3>Endereços de Entrega</h3>
-    <!-- Loop através da lista de endereços de entrega -->
-    <div th:each="endereco : ${enderecosEntrega}">
-        <input type="text" name="enderecosEntrega[__${enderecoStat.index}__].logradouro"
-               th:value="${logradouro}" placeholder="Logradouro" required>
-        <input type="text" name="enderecosEntrega[__${enderecoStat.index}__].numero"
-               th:value="${numero}" placeholder="Número" required>
-        <input type="text" name="enderecosEntrega[__${enderecoStat.index}__].bairro"
-               th:value="${bairro}" placeholder="Bairro" required>
-        <input type="text" name="enderecosEntrega[__${enderecoStat.index}__].cep"
-               th:value="${cep}" placeholder="CEP" required>
-        <input type="text" name="enderecosEntrega[__${enderecoStat.index}__].cidade"
-               th:value="${cidade}" placeholder="Cidade" required>
-        <input type="text" name="enderecosEntrega[__${enderecoStat.index}__].estado"
-               th:value="${estado}" placeholder="Estado" required>
-        <button type="button" th:onclick="'/removerEndereco?id=' + ${endereco.id}">Remover</button>
+    <div id="enderecosContainer">
+        <div th:each="endereco, enderecoStat : ${cliente.enderecosEntrega}">
+            <input type="text" name="enderecosEntrega[${enderecoStat.index}].logradouro" th:value="${endereco.logradouro}" placeholder="Logradouro" required>
+            <input type="text" name="enderecosEntrega[${enderecoStat.index}].numero" th:value="${endereco.numero}" placeholder="Número" required>
+            <input type="text" name="enderecosEntrega[${enderecoStat.index}].complemento" th:value="${endereco.complemento}" placeholder="Complemento">
+            <input type="text" name="enderecosEntrega[${enderecoStat.index}].bairro" th:value="${endereco.bairro}" placeholder="Bairro" required>
+            <input type="text" name="enderecosEntrega[${enderecoStat.index}].cidade" th:value="${endereco.cidade}" placeholder="Cidade" required>
+            <input type="text" name="enderecosEntrega[${enderecoStat.index}].uf" th:value="${endereco.uf}" placeholder="Estado" required>
+            <button type="button" onclick="removerEndereco(this)">Remover</button>
+        </div>
     </div>
-    <button type="button" onclick="adicionarEndereco()">Adicionar Novo Endereço</button>
+    <button type="button" id="addEndereco">Adicionar Endereço</button>
 
     <button type="submit">Salvar Alterações</button>
 </form>
-
-<!-- Formulário para logout -->
-<form th:action="@{/logout}" method="post">
-    <button type="submit">Sair</button>
-</form>
-
-<script>
-    function adicionarEndereco() {
-        // Lógica JavaScript para adicionar dinamicamente novos campos de endereço de entrega
-        document.getElementById('adicionarEndereco').addEventListener('click', function () {
-            const enderecoEntregaDiv = document.createElement('div');
-            const index = document.querySelectorAll('div th\\:each').length;
-            enderecoEntregaDiv.innerHTML = `
-                <label>Endereço:</label>
-                <input type="text" name="enderecosEntrega[${index}].endereco" required>
-
-                <label>Cidade:</label>
-                <input type="text" name="enderecosEntrega[${index}].cidade" required>
-
-                <label>Estado:</label>
-                <input type="text" name="enderecosEntrega[${index}].estado" required>
-
-                <label>CEP:</label>
-                <input type="text" name="enderecosEntrega[${index}].cep" required>
-            `;
-            document.querySelector('form').insertBefore(enderecoEntregaDiv, document.getElementById('adicionarEndereco'));
-        });
-    }
-</script>
 
 </body>
 </html>
