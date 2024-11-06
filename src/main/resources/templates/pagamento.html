@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Finalizar Compra</title>
+    <link rel="stylesheet" href="/css/carrinho.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Resumo da Compra</h1>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Nome do Produto</th>
+            <th>Quantidade</th>
+            <th>Preço</th>
+            <th>Subtotal</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${carrinho}">
+            <td th:text="${item.produto.nome}">Nome do Produto</td>
+            <td th:text="${item.quantidade}">Quantidade</td>
+            <td th:text="${item.produto.preco}">0.00</td>
+            <td th:text="${item.produto.preco * item.quantidade}">0.00</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div>
+        <h3>Total: R$ <span id="total" th:text="${totalCarrinho}">0.00</span></h3>
+    </div>
+
+    <!-- Formulário de pagamento -->
+    <form action="/efetuarPagamento" method="post">
+        <div class="form-group">
+            <label for="numeroCartao">Número do Cartão:</label>
+            <input type="text" id="numeroCartao" name="numeroCartao" class="form-control" required/>
+        </div>
+        <div class="form-group">
+            <label for="dataValidade">Data de Validade:</label>
+            <input type="text" id="dataValidade" name="dataValidade" class="form-control" required/>
+        </div>
+        <div class="form-group">
+            <label for="codigoSeguranca">Código de Segurança:</label>
+            <input type="text" id="codigoSeguranca" name="codigoSeguranca" class="form-control" required/>
+        </div>
+
+        <button type="submit" class="btn btn-success">Efetuar Pagamento</button>
+    </form>
+</div>
+</body>
+</html>

@@ -1,6 +1,7 @@
 package br.com.pi.lux.controller;
 import br.com.pi.lux.model.Produto;
 import br.com.pi.lux.repository.ProdutoRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -71,15 +72,25 @@ public class CarrinhoController {
     }
 
     @GetMapping("/carrinho")
-    public String verCarrinho(Model model) {
+    public String verCarrinho(HttpSession session, Model model) {
+        // Obtém o carrinho da sessão
+        List<ItemCarrinho> carrinho = (List<ItemCarrinho>) session.getAttribute("carrinho");
+
+        if (carrinho == null) {
+            carrinho = new ArrayList<>();
+        }
+
+        // Calcula o total do carrinho
         double totalCarrinho = carrinho.stream()
                 .mapToDouble(item -> item.getProduto().getPreco() * item.getQuantidade())
                 .sum();
+
         model.addAttribute("carrinho", carrinho);
         model.addAttribute("totalCarrinho", totalCarrinho);
         model.addAttribute("frete", frete);
         return "carrinho";
     }
+
 
     @PostMapping("/carrinho/frete")
     public String escolherFrete(@RequestParam("frete") double freteEscolhido, RedirectAttributes redirectAttributes) {
