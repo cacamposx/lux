@@ -6,7 +6,15 @@
     <link rel="stylesheet" href="/css/styles.css">
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            document.getElementById("addEndereco").addEventListener("click", function() {
+            const addEnderecoButton = document.getElementById("addEndereco");
+            const container = document.getElementById("enderecosContainer");
+
+            // Verifica se há já 5 endereços e desabilita o botão
+            if (container.children.length >= 5) {
+                addEnderecoButton.disabled = true;
+            }
+
+            addEnderecoButton.addEventListener("click", function() {
                 adicionarEndereco();
             });
         });
@@ -14,6 +22,12 @@
         function adicionarEndereco() {
             const container = document.getElementById("enderecosContainer");
             const index = container.children.length; // Obtém o índice atual
+
+            // Verifica se já existem 5 endereços
+            if (index >= 5) {
+                alert("Você não pode adicionar mais de 5 endereços.");
+                return;
+            }
 
             const novoEndereco = `
                 <div>
@@ -28,10 +42,21 @@
             `;
 
             container.insertAdjacentHTML('beforeend', novoEndereco);
+
+            // Desabilita o botão se o limite de 5 for atingido
+            if (container.children.length >= 5) {
+                document.getElementById("addEndereco").disabled = true;
+            }
         }
 
         function removerEndereco(button) {
+            const container = document.getElementById("enderecosContainer");
             button.parentElement.remove();
+
+            // Reativa o botão se houver menos de 5 endereços
+            if (container.children.length < 5) {
+                document.getElementById("addEndereco").disabled = false;
+            }
         }
     </script>
 </head>

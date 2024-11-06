@@ -1,10 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Perfil do Cliente</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Se você tiver um arquivo CSS para o estilo -->
 </head>
 <body>
+<header>
+    <h1>Perfil do Cliente</h1>
+</header>
 
+<!-- Exibição da mensagem de erro, caso a sessão tenha expirado -->
+<div class="erro">
+    <p th:text="${mensagem}"></p>
+</div>
+
+<section>
+    <h2>Informações do Cliente</h2>
+
+    <div>
+        <p><strong>Nome:</strong> <span th:text="${cliente.nome}"></span></p>
+        <p><strong>Email:</strong> <span th:text="${cliente.email}"></span></p>
+        <p><strong>CPF:</strong> <span th:text="${cliente.cpf}"></span></p>
+        <p><strong>Data de Nascimento:</strong> <span th:text="${cliente.dataNascimento}"></span></p>
+        <p><strong>Gênero:</strong> <span th:text="${cliente.genero}"></span></p>
+        <p><strong>Status:</strong> <span th:text="${cliente.status ? 'Ativo' : 'Inativo'}"></span></p>
+    </div>
+
+    <div>
+        <a href="/alterarCliente">Alterar Informações</a>
+    </div>
+</section>
+
+<footer>
+    <p>&copy; 2024 PiLux - Todos os direitos reservados</p>
+</footer>
 </body>
 </html>

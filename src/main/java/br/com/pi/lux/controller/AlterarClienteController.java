@@ -71,18 +71,25 @@ public class AlterarClienteController {
                                  Model model,
                                  HttpSession session) {
 
-        Cliente clienteExistente = (Cliente) session.getAttribute("cliente");
+        Cliente cliente1 = (Cliente) session.getAttribute("cliente");
 
-        if (clienteExistente == null) {
+        if (cliente1 == null) {
             model.addAttribute("mensagem", "Sessão expirada. Por favor, faça login novamente.");
             return "redirect:/loginCliente";
+        }
+
+        // Verifica se o número de endereços de entrega não excede o limite
+        if (cliente.getEnderecosEntrega().size() > 5) {
+            model.addAttribute("mensagem", "Você não pode cadastrar mais de 5 endereços de entrega.");
+            model.addAttribute("cliente", cliente1);
+            return "alterarCliente";
         }
 
         // Validação dos campos obrigatórios
         if (cliente.getNome().isEmpty() || cliente.getEmail().isEmpty() ||
                 cliente.getDataNascimento() == null || cliente.getCpf().isEmpty()) {
             model.addAttribute("mensagem", "Por favor, preencha todos os campos obrigatórios!");
-            model.addAttribute("cliente", clienteExistente);
+            model.addAttribute("cliente", cliente1);
             return "alterarCliente";
         }
 
@@ -90,39 +97,36 @@ public class AlterarClienteController {
         String cpfLimpo = cliente.getCpf().replaceAll("[^\\d]", "");
         if (!isValidCPF(cpfLimpo)) {
             model.addAttribute("mensagem", "CPF inválido!");
-            model.addAttribute("cliente", clienteExistente);
+            model.addAttribute("cliente", cliente1);
             return "alterarCliente";
         }
 
         // Verifica se as senhas coincidem
         if (!senha.isEmpty() && !senha.equals(confirmaSenha)) {
             model.addAttribute("mensagem", "As senhas não coincidem!");
-            model.addAttribute("cliente", clienteExistente);
+            model.addAttribute("cliente", cliente1);
             return "alterarCliente";
         }
 
         // Atualiza os dados do cliente
-        clienteExistente.setNome(cliente.getNome());
-        clienteExistente.setEmail(cliente.getEmail());
-        clienteExistente.setCpf(cliente.getCpf());
-        clienteExistente.setDataNascimento(cliente.getDataNascimento());
+        cliente1.setNome(cliente.getNome());
+        cliente1.setEmail(cliente.getEmail());
+        cliente1.setCpf(cliente.getCpf());
+        cliente1.setDataNascimento(cliente.getDataNascimento());
 
         // Atualiza a senha se fornecida
         if (!senha.isEmpty()) {
-            clienteExistente.setSenha(BCrypt.hashpw(senha, BCrypt.gensalt()));
+            cliente1.setSenha(BCrypt.hashpw(senha, BCrypt.gensalt()));
         }
 
         // Processa a lista de endereços
-        List<Endereco> enderecosEntrega = cliente.getEnderecosEntrega() != null ? cliente.getEnderecosEntrega().stream()
-                .filter(endereco -> endereco.getLogradouro() != null && !endereco.getLogradouro().isEmpty())
-                .collect(Collectors.toList()) : new ArrayList<>();
+        List<Endereco> enderecosEntrega = cliente.getEnderecosEntrega();
+        cliente1.setEnderecosEntrega(enderecosEntrega);
 
-        clienteExistente.setEnderecosEntrega(enderecosEntrega);
-        clienteRepository.save(clienteExistente);
+        // Atualiza o cliente no banco de dados
+        clienteRepository.save(cliente1);
 
-        session.setAttribute("cliente", clienteExistente);
-        model.addAttribute("mensagem", "Informações do cliente atualizadas com sucesso!");
-        model.addAttribute("cliente", clienteExistente);
-        return "alterarCliente";
+        model.addAttribute("mensagem", "Cliente atualizado com sucesso!");
+        return "redirect:/perfilCliente";
     }
 }

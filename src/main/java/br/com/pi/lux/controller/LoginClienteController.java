@@ -19,7 +19,9 @@ public class LoginClienteController {
     private ClienteRepository clienteRepository;
 
     @GetMapping("/loginCliente")
-    public String mostrarLoginCliente() {
+    public String mostrarLoginCliente(HttpSession session) {
+        // Limpa qualquer mensagem de erro anterior
+        session.removeAttribute("mensagem");
         return "loginCliente";
     }
 
@@ -34,17 +36,15 @@ public class LoginClienteController {
             Cliente cliente = clienteOptional.get();
 
             if (BCrypt.checkpw(senha, cliente.getSenha())) {
-                session.setAttribute("cliente", cliente); // Armazena o objeto cliente completo
-                return "redirect:/alterarCliente";
+                session.setAttribute("cliente", cliente); // Armazena o cliente na sessão
+                return "redirect:/perfilCliente";  // Redireciona para o perfil do cliente
             } else {
-                session.setAttribute("mensagem", "Senha incorreta!");
-                return "redirect:/loginCliente";
+                session.setAttribute("mensagem", "Senha incorreta!"); // Mensagem de erro para senha incorreta
+                return "redirect:/loginCliente"; // Redireciona de volta para a página de login
             }
         } else {
-            session.setAttribute("mensagem", "E-mail não cadastrado!");
-            return "redirect:/loginCliente";
+            session.setAttribute("mensagem", "E-mail não cadastrado!"); // Mensagem para email não encontrado
+            return "redirect:/loginCliente"; // Redireciona de volta para a página de login
         }
     }
-
-
 }
