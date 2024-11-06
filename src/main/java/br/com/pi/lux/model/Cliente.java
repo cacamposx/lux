@@ -31,7 +31,7 @@ public class Cliente {
     @Column(nullable = false)
     private String genero;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}) // Remova REMOVE
     @JoinColumn(name = "endereco_faturamento_id", nullable = false)
     private Endereco enderecoFaturamento;
 

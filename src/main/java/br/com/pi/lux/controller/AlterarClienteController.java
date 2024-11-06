@@ -119,9 +119,18 @@ public class AlterarClienteController {
             cliente1.setSenha(BCrypt.hashpw(senha, BCrypt.gensalt()));
         }
 
-        // Processa a lista de endereços
-        List<Endereco> enderecosEntrega = cliente.getEnderecosEntrega();
-        cliente1.setEnderecosEntrega(enderecosEntrega);
+        // Atualiza o endereço de faturamento, mantendo a integridade do banco
+        if (cliente.getEnderecoFaturamento() != null) {
+            Endereco novoEnderecoFaturamento = cliente.getEnderecoFaturamento();
+            novoEnderecoFaturamento.setCliente(cliente1); // Define o cliente para manter a referência correta
+            cliente1.setEnderecoFaturamento(novoEnderecoFaturamento);
+        }
+
+        // Atualiza a lista de endereços de entrega
+        cliente1.getEnderecosEntrega().clear();
+        for (Endereco endereco : cliente.getEnderecosEntrega()) {
+            cliente1.addEnderecoEntrega(endereco); // Usa o método auxiliar para manter a referência correta
+        }
 
         // Atualiza o cliente no banco de dados
         clienteRepository.save(cliente1);
@@ -129,4 +138,5 @@ public class AlterarClienteController {
         model.addAttribute("mensagem", "Cliente atualizado com sucesso!");
         return "redirect:/perfilCliente";
     }
+
 }
