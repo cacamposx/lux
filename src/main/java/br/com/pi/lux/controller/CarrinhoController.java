@@ -1,4 +1,5 @@
 package br.com.pi.lux.controller;
+
 import br.com.pi.lux.model.Produto;
 import br.com.pi.lux.repository.ProdutoRepository;
 import jakarta.servlet.http.HttpSession;
@@ -16,42 +17,27 @@ import java.util.*;
 @Controller
 public class CarrinhoController {
 
-    private List<ItemCarrinho> carrinho = new ArrayList<>();
     private double frete = 0.0;
 
     @Autowired
     private ProdutoRepository repository;
 
-    // Classe interna para armazenar o produto e a quantidade no carrinho
-    public static class ItemCarrinho {
-        private Produto produto;
-        private int quantidade;
-
-        public ItemCarrinho(Produto produto, int quantidade) {
-            this.produto = produto;
-            this.quantidade = quantidade;
-        }
-
-        public Produto getProduto() {
-            return produto;
-        }
-
-        public int getQuantidade() {
-            return quantidade;
-        }
-
-        public void setQuantidade(int quantidade) {
-            this.quantidade = quantidade;
-        }
-    }
-
     @PostMapping("/adicionarCarrinho")
     public String adicionarCarrinho(@RequestParam("id") Integer id,
                                     @RequestParam("quantidade") int quantidade,
+                                    HttpSession session,
                                     RedirectAttributes redirectAttributes) {
         Produto produto = repository.findById(id).orElse(null);
 
         if (produto != null) {
+            // Obtém o carrinho da sessão, ou cria um novo se não existir
+            List<ItemCarrinho> carrinho = (List<ItemCarrinho>) session.getAttribute("carrinho");
+            if (carrinho == null) {
+                carrinho = new ArrayList<>();
+                session.setAttribute("carrinho", carrinho);
+            }
+
+            // Verifica se o produto já está no carrinho
             Optional<ItemCarrinho> itemExistente = carrinho.stream()
                     .filter(item -> item.getProduto().getIdProduto() == id)
                     .findFirst();
@@ -82,7 +68,7 @@ public class CarrinhoController {
 
         // Calcula o total do carrinho
         double totalCarrinho = carrinho.stream()
-                .mapToDouble(item -> item.getProduto().getPreco() * item.getQuantidade())
+                .mapToDouble(ItemCarrinho::getTotal)
                 .sum();
 
         model.addAttribute("carrinho", carrinho);
@@ -90,7 +76,6 @@ public class CarrinhoController {
         model.addAttribute("frete", frete);
         return "carrinho";
     }
-
 
     @PostMapping("/carrinho/frete")
     public String escolherFrete(@RequestParam("frete") double freteEscolhido, RedirectAttributes redirectAttributes) {
@@ -101,37 +86,49 @@ public class CarrinhoController {
 
     @PostMapping("/atualizarQuantidade")
     public @ResponseBody Map<String, Object> atualizarQuantidade(@RequestParam("id") Integer id,
-                                                                 @RequestParam("quantidade") int quantidade) {
-        Optional<ItemCarrinho> itemCarrinho = carrinho.stream()
-                .filter(item -> item.getProduto().getIdProduto() == id)
-                .findFirst();
+                                                                 @RequestParam("quantidade") int quantidade,
+                                                                 HttpSession session) {
+        List<ItemCarrinho> carrinho = (List<ItemCarrinho>) session.getAttribute("carrinho");
 
         Map<String, Object> response = new HashMap<>();
-        if (itemCarrinho.isPresent()) {
-            itemCarrinho.get().setQuantidade(quantidade);
-            double subtotal = itemCarrinho.get().getProduto().getPreco() * quantidade;
-            double totalCarrinho = carrinho.stream()
-                    .mapToDouble(item -> item.getProduto().getPreco() * item.getQuantidade())
-                    .sum();
-            response.put("subtotal", subtotal);
-            response.put("total", totalCarrinho + frete);
+        if (carrinho != null) {
+            Optional<ItemCarrinho> itemCarrinho = carrinho.stream()
+                    .filter(item -> item.getProduto().getIdProduto() == id)
+                    .findFirst();
+
+            if (itemCarrinho.isPresent()) {
+                itemCarrinho.get().setQuantidade(quantidade);
+                double subtotal = itemCarrinho.get().getTotal();
+                double totalCarrinho = carrinho.stream()
+                        .mapToDouble(ItemCarrinho::getTotal)
+                        .sum();
+                response.put("subtotal", subtotal);
+                response.put("total", totalCarrinho + frete);
+            } else {
+                response.put("error", "Produto não encontrado no carrinho!");
+            }
         } else {
-            response.put("error", "Produto não encontrado no carrinho!");
+            response.put("error", "Carrinho não encontrado!");
         }
 
         return response;
     }
 
     @PostMapping("/removerCarrinho")
-    public @ResponseBody Map<String, Object> removerCarrinho(@RequestParam("id") Integer id) {
-        carrinho.removeIf(item -> item.getProduto().getIdProduto() == id);
-        double totalCarrinho = carrinho.stream()
-                .mapToDouble(item -> item.getProduto().getPreco() * item.getQuantidade())
-                .sum();
+    public @ResponseBody Map<String, Object> removerCarrinho(@RequestParam("id") Integer id, HttpSession session) {
+        List<ItemCarrinho> carrinho = (List<ItemCarrinho>) session.getAttribute("carrinho");
+        if (carrinho != null) {
+            carrinho.removeIf(item -> item.getProduto().getIdProduto() == id);
+            double totalCarrinho = carrinho.stream()
+                    .mapToDouble(ItemCarrinho::getTotal)
+                    .sum();
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("total", totalCarrinho + frete);
-        return response;
+            Map<String, Object> response = new HashMap<>();
+            response.put("total", totalCarrinho + frete);
+            return response;
+        }
+
+        return Collections.singletonMap("error", "Carrinho não encontrado!");
     }
 
 }

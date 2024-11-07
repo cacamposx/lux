@@ -51,41 +51,5 @@ public class LoginClienteController {
         }
     }
 
-    @GetMapping("/finalizarCompra")
-    public String finalizarCompra(HttpSession session, Model model) {
-        Cliente cliente = (Cliente) session.getAttribute("cliente");
 
-        if (cliente == null) {
-            // Se o cliente não estiver logado, redireciona para o cadastro
-            return "redirect:/cadastrarCliente";
-        }
-
-        // Recupera o carrinho do cliente da sessão
-        List<br.com.pi.lux.controller.ItemCarrinho> carrinho = (List<br.com.pi.lux.controller.ItemCarrinho>) session.getAttribute("carrinho");
-
-        if (carrinho == null) {
-            // Caso o carrinho não exista, você pode criar uma lista vazia
-            carrinho = new ArrayList<>();
-        }
-
-        // Adiciona os itens do carrinho no modelo para exibir na página de pagamento
-        model.addAttribute("carrinho", carrinho);
-
-        // Passa também o total da compra, incluindo o frete
-        double totalCarrinho = calcularTotalCarrinho(carrinho); // Método para calcular o total
-        model.addAttribute("totalCarrinho", totalCarrinho);
-
-        // Redireciona para a página de pagamento
-        return "pagamento";
-    }
-
-    // Método para calcular o total do carrinho
-// Corrigir o tipo de carrinho para o correto
-    private double calcularTotalCarrinho(List<br.com.pi.lux.controller.ItemCarrinho> carrinho) {
-        double total = 0.0;
-        for (br.com.pi.lux.controller.ItemCarrinho item : carrinho) {
-            total += item.getTotal(); // Calcula o total dos itens (produto * quantidade)
-        }
-        return total;
-    }
 }
