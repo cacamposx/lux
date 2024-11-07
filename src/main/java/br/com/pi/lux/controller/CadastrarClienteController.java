@@ -89,6 +89,23 @@ public class CadastrarClienteController {
         return "redirect:/loginCliente";
     }
 
+    @PostMapping("/preencherEndereco")
+    public String preencherEndereco(@RequestParam String cep, Model model) {
+        if (cepService.isValidCep(cep)) {
+            CepService.ViaCepResponse viaCepResponse = cepService.buscarEnderecoPorCep(cep);
+            if (viaCepResponse != null) {
+                // Converter ViaCepResponse para Endereco
+                Endereco endereco = cepService.converterParaEndereco(viaCepResponse);
+                model.addAttribute("enderecoFaturamento", endereco);  // Adicionar as informações de endereço ao modelo
+            } else {
+                model.addAttribute("mensagem", "CEP não encontrado!");
+            }
+        } else {
+            model.addAttribute("mensagem", "CEP inválido!");
+        }
+        return "cadastrarCliente";
+    }
+
     private boolean isValidCPF(String cpf) {
         String cpfLimpo = cpf.replaceAll("[^\\d]", "");
 

@@ -22,18 +22,6 @@
             <div th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}" class="error"></div>
         </div>
 
-        <script>
-            function copiarEnderecoFaturamento() {
-                document.getElementById("enderecoEntrega.cep").value = document.getElementById("enderecoFaturamento.cep").value;
-                document.getElementById("enderecoEntrega.logradouro").value = document.getElementById("enderecoFaturamento.logradouro").value;
-                document.getElementById("enderecoEntrega.numero").value = document.getElementById("enderecoFaturamento.numero").value;
-                document.getElementById("enderecoEntrega.complemento").value = document.getElementById("enderecoFaturamento.complemento").value;
-                document.getElementById("enderecoEntrega.bairro").value = document.getElementById("enderecoFaturamento.bairro").value;
-                document.getElementById("enderecoEntrega.cidade").value = document.getElementById("enderecoFaturamento.cidade").value;
-                document.getElementById("enderecoEntrega.uf").value = document.getElementById("enderecoFaturamento.uf").value;
-            }
-        </script>
-
         <!-- CPF -->
         <div class="form-group">
             <label for="cpf">CPF:</label>
@@ -82,8 +70,8 @@
 
         <h2>Endereço de Faturamento</h2>
         <div class="form-group">
-            <label for="enderecoFaturamento.cep">CEP:</label>
-            <input type="text" id="enderecoFaturamento.cep" th:field="*{enderecoFaturamento.cep}" required />
+            <label for="cep">CEP:</label>
+            <input type="text" id="cep" name="cep" required oninput="buscarEndereco()" />
         </div>
         <div class="form-group">
             <label for="enderecoFaturamento.logradouro">Logradouro:</label>
@@ -113,7 +101,6 @@
         <!-- Botão para copiar endereço -->
         <button type="button" onclick="copiarEnderecoFaturamento()">Usar endereço de faturamento como endereço de entrega</button>
 
-        <!-- Endereço de Entrega -->
         <h2>Endereço de Entrega</h2>
         <div class="form-group">
             <label for="enderecoEntrega.cep">CEP:</label>
@@ -147,5 +134,56 @@
         <button type="submit">Cadastrar</button>
     </form>
 </div>
+
+<script>
+
+    function buscarEndereco() {
+    var cep = document.getElementById("cep").value;
+    if (cep && cep.length === 8) {
+        fetch('/preencherEndereco?cep=' + cep)
+            .then(response => response.json())
+            .then(data => {
+                if (data) {
+                    // Preenchendo os campos do endereço de faturamento
+                    document.getElementById("enderecoFaturamento.logradouro").value = data.logradouro;
+                    document.getElementById("enderecoFaturamento.bairro").value = data.bairro;
+                    document.getElementById("enderecoFaturamento.cidade").value = data.localidade;
+                    document.getElementById("enderecoFaturamento.uf").value = data.uf;
+                } else {
+                    alert('CEP não encontrado!');
+                }
+            })
+            .catch(error => alert('Erro ao buscar CEP: ' + error));
+    }
+}
+
+
+    function copiarEnderecoFaturamento() {
+        // Verificando se os campos de faturamento têm valor
+        let enderecoFaturamentoLogradouro = document.getElementById("enderecoFaturamento.logradouro").value;
+        let enderecoFaturamentoBairro = document.getElementById("enderecoFaturamento.bairro").value;
+        let enderecoFaturamentoCidade = document.getElementById("enderecoFaturamento.cidade").value;
+        let enderecoFaturamentoUF = document.getElementById("enderecoFaturamento.uf").value;
+        let enderecoFaturamentoNumero = document.getElementById("enderecoFaturamento.numero").value;
+        let enderecoFaturamentoComplemento = document.getElementById("enderecoFaturamento.complemento").value;
+
+        // Verificando se os campos de endereço de faturamento estão preenchidos
+        if (enderecoFaturamentoLogradouro && enderecoFaturamentoBairro && enderecoFaturamentoCidade && enderecoFaturamentoUF && enderecoFaturamentoNumero) {
+            // Copiando os valores do faturamento para entrega
+            document.getElementById("enderecoEntrega.logradouro").value = enderecoFaturamentoLogradouro;
+            document.getElementById("enderecoEntrega.bairro").value = enderecoFaturamentoBairro;
+            document.getElementById("enderecoEntrega.cidade").value = enderecoFaturamentoCidade;
+            document.getElementById("enderecoEntrega.uf").value = enderecoFaturamentoUF;
+            document.getElementById("enderecoEntrega.numero").value = enderecoFaturamentoNumero;
+            document.getElementById("enderecoEntrega.complemento").value = enderecoFaturamentoComplemento;
+        } else {
+            // Exibe um alerta caso algum campo de faturamento esteja vazio
+            alert("Por favor, preencha todos os campos do endereço de faturamento.");
+        }
+    }
+
+
+
+</script>
 </body>
 </html>
