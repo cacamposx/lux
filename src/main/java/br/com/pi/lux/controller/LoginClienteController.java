@@ -42,12 +42,12 @@ public class LoginClienteController {
                 session.setAttribute("cliente", cliente); // Armazena o cliente na sessão
                 return "redirect:/perfilCliente";  // Redireciona para o perfil do cliente
             } else {
-                session.setAttribute("mensagem", "Senha incorreta!"); // Mensagem de erro para senha incorreta
-                return "redirect:/loginCliente"; // Redireciona de volta para a página de login
+                session.setAttribute("mensagem", "Senha incorreta!");
+                return "redirect:/loginCliente"; // Volta para o login
             }
         } else {
-            session.setAttribute("mensagem", "E-mail não cadastrado!"); // Mensagem para email não encontrado
-            return "redirect:/loginCliente"; // Redireciona de volta para a página de login
+            session.setAttribute("mensagem", "E-mail não cadastrado!");
+            return "redirect:/loginCliente"; // Volta para o login
         }
     }
 

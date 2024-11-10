@@ -14,4 +14,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
     Optional<Cliente> findByEmail(String email);
     Optional<Cliente> findByCpf(String cpf);
     List<Cliente> findByNomeContainingIgnoreCase(String filtroNome);   //Método para filtrar por nome
+
+    // Método para excluir todos os clientes
+    void deleteAll();
 }

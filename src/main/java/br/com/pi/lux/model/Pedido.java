@@ -1,6 +1,5 @@
 package br.com.pi.lux.model;
 
-import br.com.pi.lux.controller.ItemCarrinho;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -20,7 +19,7 @@ public class Pedido {
 
     @ManyToOne
     @JoinColumn(name = "endereco_entrega_id", nullable = false)
-    private Endereco enderecoEntrega;
+    private EnderecoEntrega enderecoEntrega;
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItemPedido> itens;
@@ -42,7 +41,7 @@ public class Pedido {
     public Pedido() {
     }
 
-    public Pedido(Cliente cliente, Endereco enderecoEntrega, List<ItemPedido> itens, String status, String formaPagamento, LocalDate data, double valorTotal) {
+    public Pedido(Cliente cliente, EnderecoEntrega enderecoEntrega, List<ItemPedido> itens, String status, String formaPagamento, LocalDate data, double valorTotal) {
         this.cliente = cliente;
         this.enderecoEntrega = enderecoEntrega;
         this.itens = itens;
@@ -68,11 +67,11 @@ public class Pedido {
         this.cliente = cliente;
     }
 
-    public Endereco getEnderecoEntrega() {
+    public EnderecoEntrega getEnderecoEntrega() {
         return enderecoEntrega;
     }
 
-    public void setEnderecoEntrega(Endereco enderecoEntrega) {
+    public void setEnderecoEntrega(EnderecoEntrega enderecoEntrega) {
         this.enderecoEntrega = enderecoEntrega;
     }
 

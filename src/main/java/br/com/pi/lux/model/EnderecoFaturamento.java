@@ -1,14 +1,15 @@
 package br.com.pi.lux.model;
 
 import jakarta.persistence.*;
+import br.com.pi.lux.model.enums.TipoEndereco;
 
 @Entity
-@Table(name = "tb_endereco")
-public class Endereco {
+@Table(name = "tb_endereco_faturamento")
+public class EnderecoFaturamento{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idEndereco;
+    private int idEnderecoFaturamento;
 
     @Column(nullable = false)
     private String cep;
@@ -30,15 +31,19 @@ public class Endereco {
     @Column(nullable = false)
     private String uf;
 
-    // Relacionamento para endereços de entrega
-    @ManyToOne
-    @JoinColumn(name = "cliente_id")
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TipoEndereco tipoEndereco;
+
+    @OneToOne(mappedBy = "enderecoFaturamento", cascade = CascadeType.ALL, orphanRemoval = true)
     private Cliente cliente;
 
 
-    public Endereco() {}
+    public EnderecoFaturamento(){
 
-    public Endereco(String cep, String logradouro, String numero, String complemento, String bairro, String cidade, String uf, Cliente cliente) {
+    }
+    public EnderecoFaturamento(int idEnderecoFaturamento, String cep, String logradouro, String numero, String complemento, String bairro, String cidade, String uf, TipoEndereco tipoEndereco, Cliente cliente) {
+        this.idEnderecoFaturamento = idEnderecoFaturamento;
         this.cep = cep;
         this.logradouro = logradouro;
         this.numero = numero;
@@ -46,15 +51,16 @@ public class Endereco {
         this.bairro = bairro;
         this.cidade = cidade;
         this.uf = uf;
+        this.tipoEndereco = tipoEndereco;
         this.cliente = cliente;
     }
 
-    public int getIdEndereco() {
-        return idEndereco;
+    public int getIdEnderecoFaturamento() {
+        return idEnderecoFaturamento;
     }
 
-    public void setIdEndereco(int idEndereco) {
-        this.idEndereco = idEndereco;
+    public void setIdEnderecoFaturamento(int idEnderecoFaturamento) {
+        this.idEnderecoFaturamento = idEnderecoFaturamento;
     }
 
     public String getCep() {
@@ -111,6 +117,14 @@ public class Endereco {
 
     public void setUf(String uf) {
         this.uf = uf;
+    }
+
+    public TipoEndereco getTipoEndereco() {
+        return tipoEndereco;
+    }
+
+    public void setTipoEndereco(TipoEndereco tipoEndereco) {
+        this.tipoEndereco = tipoEndereco;
     }
 
     public Cliente getCliente() {

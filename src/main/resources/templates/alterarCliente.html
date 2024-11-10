@@ -1,120 +1,51 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alterar Informações</title>
     <link rel="stylesheet" href="/css/alterarCliente.css">
-    <title>Alterar Cliente</title>
 </head>
 <body>
-<h1>Alterar Cliente</h1>
 
-<div th:if="${mensagem}">
-    <p th:text="${mensagem}"></p>
-</div>
+<header>
+    <h1>Alterar Informações do Cliente</h1>
+</header>
 
 <form action="/alterarCliente" method="post">
-    <input type="hidden" name="idCliente" th:value="${cliente.idCliente}">
-
-    <label for="nome">Nome:</label>
-    <input type="text" id="nome" name="nome" th:value="${cliente.nome}" required>
-
-    <label for="cpf">CPF:</label>
-    <input type="text" id="cpf" name="cpf" th:value="${cliente.cpf}" required>
-
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" th:value="${cliente.email}" readonly class="readonly">
-
-    <label for="senha">Senha:</label>
-    <input type="password" id="senha" name="senha">
-
-    <label for="confirmaSenha">Confirme a Senha:</label>
-    <input type="password" id="confirmaSenha" name="confirmaSenha">
-
-    <label for="dataNascimento">Data de Nascimento:</label>
-    <input type="date" id="dataNascimento" name="dataNascimento" th:value="${cliente.dataNascimento}" required>
-
-    <label for="genero">Gênero:</label>
-    <select id="genero" name="genero" required>
-        <option value="M" th:selected="${cliente.genero == 'M'}">Masculino</option>
-        <option value="F" th:selected="${cliente.genero == 'F'}">Feminino</option>
-        <option value="O" th:selected="${cliente.genero == 'O'}">Outro</option>
-    </select>
-
-    <!-- Exibição de Endereço de Faturamento -->
-    <fieldset>
-        <legend>Endereço de Faturamento</legend>
-        <label for="cepFaturamento">CEP:</label>
-        <input type="text" id="cepFaturamento" name="enderecoFaturamento.cep" th:value="${cliente.enderecoFaturamento.cep}" required>
-
-        <label for="logradouroFaturamento">Logradouro:</label>
-        <input type="text" id="logradouroFaturamento" name="enderecoFaturamento.logradouro" th:value="${cliente.enderecoFaturamento.logradouro}" required>
-
-        <label for="numeroFaturamento">Número:</label>
-        <input type="text" id="numeroFaturamento" name="enderecoFaturamento.numero" th:value="${cliente.enderecoFaturamento.numero}" required>
-
-        <label for="complementoFaturamento">Complemento:</label>
-        <input type="text" id="complementoFaturamento" name="enderecoFaturamento.complemento" th:value="${cliente.enderecoFaturamento.complemento}">
-
-        <label for="bairroFaturamento">Bairro:</label>
-        <input type="text" id="bairroFaturamento" name="enderecoFaturamento.bairro" th:value="${cliente.enderecoFaturamento.bairro}" required>
-
-        <label for="cidadeFaturamento">Cidade:</label>
-        <input type="text" id="cidadeFaturamento" name="enderecoFaturamento.cidade" th:value="${cliente.enderecoFaturamento.cidade}" required>
-
-        <label for="ufFaturamento">UF:</label>
-        <input type="text" id="ufFaturamento" name="enderecoFaturamento.uf" th:value="${cliente.enderecoFaturamento.uf}" required>
-    </fieldset>
-
-    <!-- Exibição e Edição de Endereços de Entrega -->
-    <fieldset>
-        <legend>Endereços de Entrega</legend>
-        <div th:each="endereco, index : ${enderecosEntrega}">
-            <h3 th:text="'Endereço ' + (${index.index + 1})"></h3>
-            <label th:for="'cepEntrega' + ${index.index}">CEP:</label>
-            <input type="text" th:id="'cepEntrega' + ${index.index}" th:name="'enderecosEntrega[' + ${index.index} + '].cep'" th:value="${endereco.cep}" required>
-
-            <label th:for="'logradouroEntrega' + ${index.index}">Logradouro:</label>
-            <input type="text" th:id="'logradouroEntrega' + ${index.index}" th:name="'enderecosEntrega[' + ${index.index} + '].logradouro'" th:value="${endereco.logradouro}" required>
-
-            <label th:for="'numeroEntrega' + ${index.index}">Número:</label>
-            <input type="text" th:id="'numeroEntrega' + ${index.index}" th:name="'enderecosEntrega[' + ${index.index} + '].numero'" th:value="${endereco.numero}" required>
-
-            <label th:for="'complementoEntrega' + ${index.index}">Complemento:</label>
-            <input type="text" th:id="'complementoEntrega' + ${index.index}" th:name="'enderecosEntrega[' + ${index.index} + '].complemento'" th:value="${endereco.complemento}">
-
-            <label th:for="'bairroEntrega' + ${index.index}">Bairro:</label>
-            <input type="text" th:id="'bairroEntrega' + ${index.index}" th:name="'enderecosEntrega[' + ${index.index} + '].bairro'" th:value="${endereco.bairro}" required>
-
-            <label th:for="'cidadeEntrega' + ${index.index}">Cidade:</label>
-            <input type="text" th:id="'cidadeEntrega' + ${index.index}" th:name="'enderecosEntrega[' + ${index.index} + '].cidade'" th:value="${endereco.cidade}" required>
-
-            <label th:for="'ufEntrega' + ${index.index}">UF:</label>
-            <input type="text" th:id="'ufEntrega' + ${index.index}" th:name="'enderecosEntrega[' + ${index.index} + '].uf'" th:value="${endereco.uf}" required>
-
-            <!-- Botão para remover endereço -->
-            <button type="button" th:onclick="'removeEndereco(' + ${index.index} + ')'">Remover</button>
-        </div>
-
-        <!-- Botão para adicionar um novo endereço de entrega -->
-        <button type="button" onclick="addEnderecoEntrega()">Adicionar Novo Endereço</button>
-    </fieldset>
+    <div>
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" th:value="${cliente.nome}" required>
+    </div>
+    <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" th:value="${cliente.email}" required>
+    </div>
+    <div>
+        <label for="cpf">CPF:</label>
+        <input type="text" id="cpf" name="cpf" th:value="${cliente.cpf}" required>
+    </div>
+    <div>
+        <label for="dataNascimento">Data de Nascimento:</label>
+        <input type="date" id="dataNascimento" name="dataNascimento" th:value="${cliente.dataNascimento}" required>
+    </div>
+    <div>
+        <label for="genero">Gênero:</label>
+        <select id="genero" name="genero">
+            <option value="M" th:selected="${cliente.genero == 'M'}">Masculino</option>
+            <option value="F" th:selected="${cliente.genero == 'F'}">Feminino</option>
+            <option value="O" th:selected="${cliente.genero == 'O'}">Outro</option>
+        </select>
+    </div>
+    <div>
+        <label for="status">Status:</label>
+        <select id="status" name="status">
+            <option value="ATIVO" th:selected="${cliente.status == 'ATIVO'}">Ativo</option>
+            <option value="INATIVO" th:selected="${cliente.status == 'INATIVO'}">Inativo</option>
+        </select>
+    </div>
 
     <button type="submit">Salvar Alterações</button>
-    <a href="/perfilCliente"><button type="button">Cancelar</button></a>
-    <a href="/perfilCliente">Voltar ao Perfil do Cliente</a>
 </form>
 
-<script>
-    function addEnderecoEntrega() {
-        // Lógica JavaScript para adicionar um novo bloco de endereço de entrega
-        // Pode envolver manipulação de DOM para inserir novos campos dinamicamente
-    }
-
-    function removeEndereco(index) {
-        // Lógica JavaScript para remover o bloco de endereço de entrega específico
-        // Use a lógica de DOM para excluir o bloco baseado no index
-    }
-</script>
 </body>
 </html>

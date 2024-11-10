@@ -1,7 +1,7 @@
 package br.com.pi.lux.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,58 +13,32 @@ public class Cliente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idCliente;
 
-    @Column(nullable = false)
     private String nome;
-
-    @Column(nullable = false, unique = true)
-    private String cpf;
-
-    @Column(nullable = false, unique = true)
     private String email;
-
-    @Column(nullable = false)
+    private String cpf;
     private String senha;
-
-    @Column(nullable = false)
-    private LocalDate dataNascimento;
-
-    @Column(nullable = false)
     private String genero;
+    private String dataNascimento;
+    private String status;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}) // Remova REMOVE
-    @JoinColumn(name = "endereco_faturamento_id", nullable = false)
-    private Endereco enderecoFaturamento;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "endereco_faturamento_id")
+    private EnderecoFaturamento enderecoFaturamento;
 
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<Endereco> enderecosEntrega = new ArrayList<>();
 
-    @Column(nullable = false)
-    private boolean status;
-
-    // Construtores, getters e setters
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<EnderecoEntrega> enderecosEntrega = new ArrayList<>();
 
     public Cliente() {}
 
-    public Cliente(String nome, String cpf, String email, String senha, LocalDate dataNascimento, String genero, Endereco enderecoFaturamento, boolean status) {
+    public Cliente(String nome, String email, String cpf, String senha, String genero, String dataNascimento, String status) {
         this.nome = nome;
-        this.cpf = cpf;
         this.email = email;
+        this.cpf = cpf;
         this.senha = senha;
-        this.dataNascimento = dataNascimento;
         this.genero = genero;
-        this.enderecoFaturamento = enderecoFaturamento;
+        this.dataNascimento = dataNascimento;
         this.status = status;
-    }
-
-    // Métodos auxiliares para gerenciamento de endereços de entrega
-    public void addEnderecoEntrega(Endereco endereco) {
-        enderecosEntrega.add(endereco);
-        endereco.setCliente(this);
-    }
-
-    public void removeEnderecoEntrega(Endereco endereco) {
-        enderecosEntrega.remove(endereco);
-        endereco.setCliente(null);
     }
 
     public int getIdCliente() {
@@ -83,20 +57,20 @@ public class Cliente {
         this.nome = nome;
     }
 
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
     public String getSenha() {
@@ -107,14 +81,6 @@ public class Cliente {
         this.senha = senha;
     }
 
-    public LocalDate getDataNascimento() {
-        return dataNascimento;
-    }
-
-    public void setDataNascimento(LocalDate dataNascimento) {
-        this.dataNascimento = dataNascimento;
-    }
-
     public String getGenero() {
         return genero;
     }
@@ -123,27 +89,35 @@ public class Cliente {
         this.genero = genero;
     }
 
-    public Endereco getEnderecoFaturamento() {
-        return enderecoFaturamento;
+    public String getDataNascimento() {
+        return dataNascimento;
     }
 
-    public void setEnderecoFaturamento(Endereco enderecoFaturamento) {
-        this.enderecoFaturamento = enderecoFaturamento;
+    public void setDataNascimento(String dataNascimento) {
+        this.dataNascimento = dataNascimento;
     }
 
-    public List<Endereco> getEnderecosEntrega() {
-        return enderecosEntrega;
-    }
-
-    public void setEnderecosEntrega(List<Endereco> enderecosEntrega) {
-        this.enderecosEntrega = enderecosEntrega;
-    }
-
-    public boolean isStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(boolean status) {
+    public void setStatus(String status) {
         this.status = status;
+    }
+
+    public EnderecoFaturamento getEnderecoFaturamento() {
+        return enderecoFaturamento;
+    }
+
+    public void setEnderecoFaturamento(EnderecoFaturamento enderecoFaturamento) {
+        this.enderecoFaturamento = enderecoFaturamento;
+    }
+
+    public List<EnderecoEntrega> getEnderecosEntrega() {
+        return enderecosEntrega;
+    }
+
+    public void setEnderecosEntrega(List<EnderecoEntrega> enderecosEntrega) {
+        this.enderecosEntrega = enderecosEntrega;
     }
 }

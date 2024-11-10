@@ -29,4 +29,5 @@ public class PerfilClienteController {
         model.addAttribute("mensagem", "Sessão expirada. Faça login novamente.");
         return "redirect:/loginCliente";
     }
+
 }
