@@ -57,32 +57,34 @@ public class CadastrarClienteController {
 
         // Verifique se o status está null e defina um valor padrão
         if (cliente.getStatus() == null) {
-            cliente.setStatus("ATIVO");  // Defina um status padrão
+            cliente.setStatus("ATIVO");
         }
 
-        // Verificar todos os endereços de entrega e garantir que cada um tem o tipo de endereço definido
+        // Associar os endereços de entrega e faturamento ao cliente
         if (cliente.getEnderecosEntrega() != null) {
             for (EnderecoEntrega endereco : cliente.getEnderecosEntrega()) {
                 if (endereco.getTipoEndereco() == null) {
-                    endereco.setTipoEndereco(TipoEndereco.ENTREGA);  // Garantir que o tipo está setado
+                    endereco.setTipoEndereco(TipoEndereco.ENTREGA);  // Garantir que o tipo esteja setado
                 }
+                endereco.setCliente(cliente);  // Garantir que o cliente está associado
             }
         }
 
-        // Certifique-se de que o tipo de endereço de faturamento está definido
         if (cliente.getEnderecoFaturamento() != null) {
             EnderecoFaturamento enderecoFaturamento = cliente.getEnderecoFaturamento();
             if (enderecoFaturamento.getTipoEndereco() == null) {
-                enderecoFaturamento.setTipoEndereco(TipoEndereco.FATURAMENTO);  // Garantir que o tipo está setado
+                enderecoFaturamento.setTipoEndereco(TipoEndereco.FATURAMENTO);
             }
+            enderecoFaturamento.setCliente(cliente);  // Garantir que o cliente está associado
         }
 
-        // Salvando o cliente no banco de dados
+        // Salvar o cliente e os endereços no banco
         clienteRepository.save(cliente);
 
         model.addAttribute("mensagem", "Cliente cadastrado com sucesso!");
         return "redirect:/loginCliente";
     }
+
 
 
 

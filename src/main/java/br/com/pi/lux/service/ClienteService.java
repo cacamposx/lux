@@ -1,8 +1,10 @@
 package br.com.pi.lux.service;
 
 import br.com.pi.lux.model.Cliente;
+import br.com.pi.lux.model.EnderecoEntrega;
 import br.com.pi.lux.model.EnderecoFaturamento;
 import br.com.pi.lux.repository.ClienteRepository;
+import br.com.pi.lux.repository.EnderecoEntregaRepository;
 import br.com.pi.lux.repository.EnderecoFaturamentoRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,21 +18,29 @@ public class ClienteService {
     private ClienteRepository clienteRepository;
 
     @Autowired
-    private EnderecoFaturamentoRepository enderecoFaturamentoRepository; // Usando o repositório correto
+    private EnderecoFaturamentoRepository enderecoFaturamentoRepository;
+
+    @Autowired
+    private EnderecoEntregaRepository enderecoEntregaRepository;
 
     public Cliente cadastrarCliente(Cliente cliente) {
-        // Primeiro, salva o endereço de faturamento
-        EnderecoFaturamento enderecoFaturamento = cliente.getEnderecoFaturamento();
-        enderecoFaturamentoRepository.save(enderecoFaturamento); // Salvar o endereço de faturamento no banco de dados
+        // Verificar e salvar o endereço de faturamento
+        if (cliente.getEnderecoFaturamento() != null) {
+            EnderecoFaturamento enderecoFaturamento = cliente.getEnderecoFaturamento();
+            enderecoFaturamento.setCliente(cliente);  // Associando o cliente ao endereço de faturamento
+            enderecoFaturamentoRepository.save(enderecoFaturamento);  // Salvar no banco
+        }
 
-        // Agora, associa o endereço de faturamento ao cliente
-        cliente.setEnderecoFaturamento(enderecoFaturamento);  // Associando o EnderecoFaturamento ao Cliente
+        // Verificar e salvar os endereços de entrega
+        if (cliente.getEnderecosEntrega() != null) {
+            for (EnderecoEntrega enderecoEntrega : cliente.getEnderecosEntrega()) {
+                enderecoEntrega.setCliente(cliente);  // Associando o cliente a cada endereço de entrega
+                enderecoEntregaRepository.save(enderecoEntrega);  // Salvar no banco
+            }
+        }
 
-        // Depois, salva o cliente
-        return clienteRepository.save(cliente);  // Salvar o cliente no banco de dados
-    }
-
-    public void excluirTodosClientes() {
-        clienteRepository.deleteAll();
+        // Agora, salva o cliente
+        return clienteRepository.save(cliente);
     }
 }
+

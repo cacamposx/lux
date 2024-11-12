@@ -44,6 +44,88 @@
         </select>
     </div>
 
+    <!-- Endereço de Faturamento -->
+    <div>
+        <h3>Endereço de Faturamento</h3>
+        <div>
+            <label for="cepFaturamento">CEP:</label>
+            <input type="text" id="cepFaturamento" name="enderecoFaturamento.cep" th:value="${cliente.enderecoFaturamento.cep}" required>
+        </div>
+        <div>
+            <label for="logradouroFaturamento">Logradouro:</label>
+            <input type="text" id="logradouroFaturamento" name="enderecoFaturamento.logradouro" th:value="${cliente.enderecoFaturamento.logradouro}" required>
+        </div>
+        <div>
+            <label for="numeroFaturamento">Número:</label>
+            <input type="text" id="numeroFaturamento" name="enderecoFaturamento.numero" th:value="${cliente.enderecoFaturamento.numero}" required>
+        </div>
+        <div>
+            <label for="bairroFaturamento">Bairro:</label>
+            <input type="text" id="bairroFaturamento" name="enderecoFaturamento.bairro" th:value="${cliente.enderecoFaturamento.bairro}" required>
+        </div>
+        <div>
+            <label for="cidadeFaturamento">Cidade:</label>
+            <input type="text" id="cidadeFaturamento" name="enderecoFaturamento.cidade" th:value="${cliente.enderecoFaturamento.cidade}" required>
+        </div>
+        <div>
+            <label for="ufFaturamento">UF:</label>
+            <input type="text" id="ufFaturamento" name="enderecoFaturamento.uf" th:value="${cliente.enderecoFaturamento.uf}" required>
+        </div>
+    </div>
+
+    <div th:each="endereco, stat : ${cliente.enderecosEntrega}">
+        <h4>Endereço [[${stat.index + 1}]]</h4>
+        <div>
+            <label for="cepEntrega">CEP:</label>
+            <input type="text"
+                   id="cepEntrega"
+                   name="enderecosEntrega[${stat.index}].cep"
+                   th:value="${endereco.cep}"
+                   required>
+        </div>
+        <div>
+            <label for="logradouroEntrega">Logradouro:</label>
+            <input type="text"
+                   id="logradouroEntrega"
+                   name="enderecosEntrega[${stat.index}].logradouro"
+                   th:value="${endereco.logradouro}"
+                   required>
+        </div>
+        <div>
+            <label for="numeroEntrega">Número:</label>
+            <input type="text"
+                   id="numeroEntrega"
+                   name="enderecosEntrega[${stat.index}].numero"
+                   th:value="${endereco.numero}"
+                   required>
+        </div>
+        <div>
+            <label for="bairroEntrega">Bairro:</label>
+            <input type="text"
+                   id="bairroEntrega"
+                   name="enderecosEntrega[${stat.index}].bairro"
+                   th:value="${endereco.bairro}"
+                   required>
+        </div>
+        <div>
+            <label for="cidadeEntrega">Cidade:</label>
+            <input type="text"
+                   id="cidadeEntrega"
+                   name="enderecosEntrega[${stat.index}].cidade"
+                   th:value="${endereco.cidade}"
+                   required>
+        </div>
+        <div>
+            <label for="ufEntrega">UF:</label>
+            <input type="text"
+                   id="ufEntrega"
+                   name="enderecosEntrega[${stat.index}].uf"
+                   th:value="${endereco.uf}"
+                   required>
+        </div>
+    </div>
+
+
     <button type="submit">Salvar Alterações</button>
 </form>
 

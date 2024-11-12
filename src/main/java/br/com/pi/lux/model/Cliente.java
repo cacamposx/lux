@@ -26,7 +26,7 @@ public class Cliente {
     private EnderecoFaturamento enderecoFaturamento;
 
 
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<EnderecoEntrega> enderecosEntrega = new ArrayList<>();
 
     public Cliente() {}

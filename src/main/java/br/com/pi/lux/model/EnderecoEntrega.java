@@ -35,6 +35,7 @@ public class EnderecoEntrega {
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private TipoEndereco tipoEndereco;  // Usando o novo enum

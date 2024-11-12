@@ -11,9 +11,4 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
-    @DeleteMapping("/clientes/excluir-todos")
-    public String excluirTodosClientes() {
-        clienteService.excluirTodosClientes();
-        return "Todos os clientes e endereços foram excluídos com sucesso.";
-    }
 }
