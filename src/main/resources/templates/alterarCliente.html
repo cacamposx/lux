@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alterar Informações</title>
     <link rel="stylesheet" href="/css/alterarCliente.css">
 </head>
@@ -11,122 +12,45 @@
     <h1>Alterar Informações do Cliente</h1>
 </header>
 
-<form action="/alterarCliente" method="post">
+<form action="/alterarCliente" method="post" th:object="${cliente}">
     <div>
         <label for="nome">Nome:</label>
-        <input type="text" id="nome" name="nome" th:value="${cliente.nome}" required>
+        <input type="text" id="nome" name="nome" th:field="*{nome}" required>
     </div>
     <div>
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" th:value="${cliente.email}" required>
+        <input type="email" id="email" name="email" th:field="*{email}" required>
     </div>
     <div>
         <label for="cpf">CPF:</label>
-        <input type="text" id="cpf" name="cpf" th:value="${cliente.cpf}" required>
+        <input type="text" id="cpf" name="cpf" th:field="*{cpf}" required>
     </div>
     <div>
         <label for="dataNascimento">Data de Nascimento:</label>
-        <input type="date" id="dataNascimento" name="dataNascimento" th:value="${cliente.dataNascimento}" required>
+        <input type="date" id="dataNascimento" name="dataNascimento" th:field="*{dataNascimento}" required>
     </div>
     <div>
         <label for="genero">Gênero:</label>
-        <select id="genero" name="genero">
+        <select id="genero" name="genero" th:field="*{genero}">
             <option value="M" th:selected="${cliente.genero == 'M'}">Masculino</option>
             <option value="F" th:selected="${cliente.genero == 'F'}">Feminino</option>
             <option value="O" th:selected="${cliente.genero == 'O'}">Outro</option>
         </select>
     </div>
-    <div>
-        <label for="status">Status:</label>
-        <select id="status" name="status">
-            <option value="ATIVO" th:selected="${cliente.status == 'ATIVO'}">Ativo</option>
-            <option value="INATIVO" th:selected="${cliente.status == 'INATIVO'}">Inativo</option>
-        </select>
-    </div>
-
-    <!-- Endereço de Faturamento -->
-    <div>
-        <h3>Endereço de Faturamento</h3>
-        <div>
-            <label for="cepFaturamento">CEP:</label>
-            <input type="text" id="cepFaturamento" name="enderecoFaturamento.cep" th:value="${cliente.enderecoFaturamento.cep}" required>
-        </div>
-        <div>
-            <label for="logradouroFaturamento">Logradouro:</label>
-            <input type="text" id="logradouroFaturamento" name="enderecoFaturamento.logradouro" th:value="${cliente.enderecoFaturamento.logradouro}" required>
-        </div>
-        <div>
-            <label for="numeroFaturamento">Número:</label>
-            <input type="text" id="numeroFaturamento" name="enderecoFaturamento.numero" th:value="${cliente.enderecoFaturamento.numero}" required>
-        </div>
-        <div>
-            <label for="bairroFaturamento">Bairro:</label>
-            <input type="text" id="bairroFaturamento" name="enderecoFaturamento.bairro" th:value="${cliente.enderecoFaturamento.bairro}" required>
-        </div>
-        <div>
-            <label for="cidadeFaturamento">Cidade:</label>
-            <input type="text" id="cidadeFaturamento" name="enderecoFaturamento.cidade" th:value="${cliente.enderecoFaturamento.cidade}" required>
-        </div>
-        <div>
-            <label for="ufFaturamento">UF:</label>
-            <input type="text" id="ufFaturamento" name="enderecoFaturamento.uf" th:value="${cliente.enderecoFaturamento.uf}" required>
-        </div>
-    </div>
-
-    <div th:each="endereco, stat : ${cliente.enderecosEntrega}">
-        <h4>Endereço [[${stat.index + 1}]]</h4>
-        <div>
-            <label for="cepEntrega">CEP:</label>
-            <input type="text"
-                   id="cepEntrega"
-                   name="enderecosEntrega[${stat.index}].cep"
-                   th:value="${endereco.cep}"
-                   required>
-        </div>
-        <div>
-            <label for="logradouroEntrega">Logradouro:</label>
-            <input type="text"
-                   id="logradouroEntrega"
-                   name="enderecosEntrega[${stat.index}].logradouro"
-                   th:value="${endereco.logradouro}"
-                   required>
-        </div>
-        <div>
-            <label for="numeroEntrega">Número:</label>
-            <input type="text"
-                   id="numeroEntrega"
-                   name="enderecosEntrega[${stat.index}].numero"
-                   th:value="${endereco.numero}"
-                   required>
-        </div>
-        <div>
-            <label for="bairroEntrega">Bairro:</label>
-            <input type="text"
-                   id="bairroEntrega"
-                   name="enderecosEntrega[${stat.index}].bairro"
-                   th:value="${endereco.bairro}"
-                   required>
-        </div>
-        <div>
-            <label for="cidadeEntrega">Cidade:</label>
-            <input type="text"
-                   id="cidadeEntrega"
-                   name="enderecosEntrega[${stat.index}].cidade"
-                   th:value="${endereco.cidade}"
-                   required>
-        </div>
-        <div>
-            <label for="ufEntrega">UF:</label>
-            <input type="text"
-                   id="ufEntrega"
-                   name="enderecosEntrega[${stat.index}].uf"
-                   th:value="${endereco.uf}"
-                   required>
-        </div>
-    </div>
-
-
     <button type="submit">Salvar Alterações</button>
+
+    <div>
+        <a href="/editarEnderecoFaturamento" class="btn">Editar Endereço de Faturamento</a>
+    </div>
+
+    <div th:if="${#lists.isEmpty(enderecosEntrega)}">
+        <p>Você não tem endereços de entrega cadastrados.</p>
+    </div>
+
+    <div th:each="endereco : ${enderecosEntrega}">
+        <a th:href="@{/editarEnderecosEntrega/{id}(id=${endereco.idEndereco})}" class="btn">Editar Endereço de Entrega</a>
+    </div>
+
 </form>
 
 </body>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Endereço de Faturamento</title>
+</head>
+<body>
+
+<h2>Editar Endereço de Faturamento</h2>
+
+<form th:action="@{/alterarEnderecoFaturamento}" method="post" th:object="${endereco}">
+    <input type="hidden" th:field="*{idEnderecoFaturamento}" />
+
+    <div>
+        <label for="cep">CEP:</label>
+        <input type="text" id="cep" name="cep" th:field="*{cep}" required>
+    </div>
+    <div>
+        <label for="logradouro">Logradouro:</label>
+        <input type="text" id="logradouro" name="logradouro" th:field="*{logradouro}" required>
+    </div>
+    <div>
+        <label for="numero">Número:</label>
+        <input type="text" id="numero" name="numero" th:field="*{numero}" required>
+    </div>
+    <div>
+        <label for="complemento">Complemento:</label>
+        <input type="text" id="complemento" name="complemento" th:field="*{complemento}">
+    </div>
+    <div>
+        <label for="bairro">Bairro:</label>
+        <input type="text" id="bairro" name="bairro" th:field="*{bairro}" required>
+    </div>
+    <div>
+        <label for="cidade">Cidade:</label>
+        <input type="text" id="cidade" name="cidade" th:field="*{cidade}" required>
+    </div>
+    <div>
+        <label for="uf">UF:</label>
+        <input type="text" id="uf" name="uf" th:field="*{uf}" required>
+    </div>
+
+    <button type="submit">Salvar</button>
+</form>
+
+
+</body>
+</html>
