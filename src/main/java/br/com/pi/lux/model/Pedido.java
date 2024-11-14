@@ -3,6 +3,7 @@ package br.com.pi.lux.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,12 +18,14 @@ public class Pedido {
     @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
 
+    private double frete;
+
     @ManyToOne
     @JoinColumn(name = "endereco_entrega_id", nullable = false)
     private EnderecoEntrega enderecoEntrega;
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ItemPedido> itens;
+    private List<ItemPedido> itens = new ArrayList<>();
 
     @Column(nullable = false)
     private String status;
@@ -44,7 +47,7 @@ public class Pedido {
     public Pedido(Cliente cliente, EnderecoEntrega enderecoEntrega, List<ItemPedido> itens, String status, String formaPagamento, LocalDate data, double valorTotal) {
         this.cliente = cliente;
         this.enderecoEntrega = enderecoEntrega;
-        this.itens = itens;
+        this.itens = (itens == null) ? new ArrayList<>() : itens; // Inicializa a lista se for nula
         this.status = status;
         this.formaPagamento = formaPagamento;
         this.data = data;
@@ -81,6 +84,7 @@ public class Pedido {
 
     public void setItens(List<ItemPedido> itens) {
         this.itens = itens;
+        calcularValorTotal(); // Recalcula o valor total ao definir os itens
     }
 
     public String getStatus() {
@@ -89,6 +93,15 @@ public class Pedido {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public double getFrete() {
+        return frete;
+    }
+
+    public void setFrete(double frete) {
+        this.frete = frete;
+        calcularValorTotal(); // Recalcula o valor total ao definir o frete
     }
 
     public String getFormaPagamento() {
@@ -117,17 +130,22 @@ public class Pedido {
 
     // Método para calcular o valor total
     public void calcularValorTotal() {
-        this.valorTotal = itens.stream().mapToDouble(ItemPedido::getTotal).sum();
+        this.valorTotal = itens.stream().mapToDouble(ItemPedido::getTotal).sum() + this.frete;
     }
 
+    // Método para validar o pedido
+    public boolean validarPedido() {
+        return cliente != null && enderecoEntrega != null && !itens.isEmpty() && frete >= 0;
+    }
+
+    // Métodos para adicionar e remover itens
     public void adicionarItem(ItemPedido item) {
         this.itens.add(item);
-        this.calcularValorTotal();  // Recalcula o valor total
+        calcularValorTotal();  // Recalcula o valor total
     }
 
     public void removerItem(ItemPedido item) {
         this.itens.remove(item);
-        this.calcularValorTotal();  // Recalcula o valor total
+        calcularValorTotal();  // Recalcula o valor total
     }
-
 }
