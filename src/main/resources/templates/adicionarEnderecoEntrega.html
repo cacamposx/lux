@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Adicionar Endereço de Entrega</title>
+</head>
+<body>
+<header>
+    <h1>Adicionar Novo Endereço</h1>
+</header>
+
+<form action="/salvarEnderecoEntrega" method="post">
+    <div>
+        <label for="cep">CEP:</label>
+        <input type="text" id="cep" name="cep" required />
+    </div>
+    <div>
+        <label for="logradouro">Logradouro:</label>
+        <input type="text" id="logradouro" name="logradouro" required />
+    </div>
+    <div>
+        <label for="numero">Número:</label>
+        <input type="text" id="numero" name="numero" required />
+    </div>
+    <div>
+        <label for="bairro">Bairro:</label>
+        <input type="text" id="bairro" name="bairro" required />
+    </div>
+    <div>
+        <label for="cidade">Cidade:</label>
+        <input type="text" id="cidade" name="cidade" required />
+    </div>
+    <div>
+        <label for="uf">UF:</label>
+        <input type="text" id="uf" name="uf" required />
+    </div>
+    <div>
+        <button type="submit">Salvar Endereço</button>
+    </div>
+</form>
+
+<footer>
+    <p>&copy; 2024 PiLux - Todos os direitos reservados</p>
+</footer>
+</body>
+</html>

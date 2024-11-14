@@ -34,6 +34,90 @@
     </div>
 </section>
 
+<section>
+    <h2>Meus Endereços de Faturamento</h2>
+
+    <!-- Verifica se o cliente tem um endereço de faturamento -->
+    <div th:if="${cliente.enderecoFaturamento != null}">
+        <table>
+            <thead>
+            <tr>
+                <th>CEP</th>
+                <th>Logradouro</th>
+                <th>Número</th>
+                <th>Bairro</th>
+                <th>Cidade</th>
+                <th>UF</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td th:text="${cliente.enderecoFaturamento.cep}"></td>
+                <td th:text="${cliente.enderecoFaturamento.logradouro}"></td>
+                <td th:text="${cliente.enderecoFaturamento.numero}"></td>
+                <td th:text="${cliente.enderecoFaturamento.bairro}"></td>
+                <td th:text="${cliente.enderecoFaturamento.cidade}"></td>
+                <td th:text="${cliente.enderecoFaturamento.uf}"></td>
+                <td>
+                    <a th:href="@{/editarEnderecoFaturamento/{id}(id=${cliente.enderecoFaturamento.idEnderecoFaturamento})}">Editar</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Caso o cliente não tenha um endereço de faturamento -->
+    <div th:if="${cliente.enderecoFaturamento == null}">
+        <p>Você ainda não tem um endereço de faturamento cadastrado.</p>
+    </div>
+</section>
+
+<!-- Seção de Endereços de Entrega -->
+<section>
+    <h2>Meus Endereços de Entrega</h2>
+
+    <!-- Verifica se o cliente tem endereços de entrega -->
+    <div th:if="${cliente.enderecosEntrega != null and !cliente.enderecosEntrega.isEmpty()}">
+        <table>
+            <thead>
+            <tr>
+                <th>CEP</th>
+                <th>Logradouro</th>
+                <th>Número</th>
+                <th>Bairro</th>
+                <th>Cidade</th>
+                <th>UF</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="endereco : ${cliente.enderecosEntrega}">
+                <td th:text="${endereco.cep}"></td>
+                <td th:text="${endereco.logradouro}"></td>
+                <td th:text="${endereco.numero}"></td>
+                <td th:text="${endereco.bairro}"></td>
+                <td th:text="${endereco.cidade}"></td>
+                <td th:text="${endereco.uf}"></td>
+                <td>
+                    <a th:href="@{/editarEnderecosEntrega/{id}(id=${endereco.idEndereco})}">Editar</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Caso o cliente não tenha endereços cadastrados -->
+    <div th:if="${cliente.enderecosEntrega == null or cliente.enderecosEntrega.isEmpty()}">
+        <p>Você ainda não tem endereços cadastrados.</p>
+    </div>
+
+    <div>
+        <a href="/adicionarEnderecoEntrega">Adicionar Novo Endereço</a>
+    </div>
+</section>
+
+
 <footer>
     <p>&copy; 2024 PiLux - Todos os direitos reservados</p>
 </footer>

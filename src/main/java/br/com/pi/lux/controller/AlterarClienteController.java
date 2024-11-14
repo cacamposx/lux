@@ -3,6 +3,7 @@ package br.com.pi.lux.controller;
 import br.com.pi.lux.model.Cliente;
 import br.com.pi.lux.model.EnderecoEntrega;
 import br.com.pi.lux.model.EnderecoFaturamento;
+import br.com.pi.lux.model.enums.TipoEndereco;
 import br.com.pi.lux.repository.ClienteRepository;
 import br.com.pi.lux.repository.EnderecoEntregaRepository;
 import br.com.pi.lux.repository.EnderecoFaturamentoRepository;
@@ -21,12 +22,12 @@ public class AlterarClienteController {
 
     @Autowired
     private ClienteRepository clienteRepository;
+
     @Autowired
     private EnderecoEntregaRepository enderecoEntregaRepository;
 
     @Autowired
     private EnderecoFaturamentoRepository enderecoFaturamentoRepository;
-
 
     // Exibe o formulário de alteração de cliente
     @GetMapping("/alterarCliente")
@@ -44,42 +45,49 @@ public class AlterarClienteController {
         return "redirect:/loginCliente";  // Redireciona para o login se o cliente não estiver na sessão
     }
 
-    // Salva as alterações no endereço de entrega
-    // Processa o formulário de alteração de cliente
     @PostMapping("/alterarCliente")
     @Transactional
     public String salvarAlteracoesCliente(@ModelAttribute("cliente") Cliente clienteAlterado, HttpSession session) {
         Cliente cliente = (Cliente) session.getAttribute("cliente");
 
         if (cliente != null) {
-            // Atualiza as informações do cliente com os dados recebidos do formulário
-            cliente.setNome(clienteAlterado.getNome());
-            cliente.setEmail(clienteAlterado.getEmail());
-            cliente.setCpf(clienteAlterado.getCpf());
-            cliente.setDataNascimento(clienteAlterado.getDataNascimento());
-            cliente.setGenero(clienteAlterado.getGenero());
+            // Buscar o cliente no banco de dados para garantir que o contexto de persistência esteja correto
+            cliente = clienteRepository.findById(cliente.getIdCliente()).orElse(null);
 
-            // Salva as alterações no banco de dados
-            clienteRepository.save(cliente);  // Salva as mudanças feitas no cliente
-            session.setAttribute("cliente", cliente);  // Atualiza a sessão com o cliente modificado
+            if (cliente != null) {
+                // Atualiza os dados do cliente
+                cliente.setNome(clienteAlterado.getNome());
+                cliente.setEmail(clienteAlterado.getEmail());
+                cliente.setCpf(clienteAlterado.getCpf());
+                cliente.setDataNascimento(clienteAlterado.getDataNascimento());
+                cliente.setGenero(clienteAlterado.getGenero());
 
-            return "redirect:/perfilCliente";  // Redireciona para o perfil após salvar
+                // Salva as alterações no banco de dados
+                clienteRepository.save(cliente);
+
+                // Atualiza a sessão com os dados alterados
+                session.setAttribute("cliente", cliente);
+
+                // Redireciona para o perfil do cliente
+                return "redirect:/perfilCliente";
+            }
         }
-
-        return "redirect:/loginCliente";  // Se o cliente não estiver na sessão, redireciona para o login
+        return "redirect:/loginCliente";  // Se o cliente não estiver na sessão
     }
 
-    // Exibe o formulário para editar o endereço de faturamento
-    @GetMapping("/editarEnderecoFaturamento")
-    public String editarEnderecoFaturamento(HttpSession session, Model model) {
+
+    // Adicionar novo endereço de entrega
+    @GetMapping("/adicionarEnderecoEntrega")
+    public String adicionarEnderecoEntrega(HttpSession session, Model model) {
         Cliente cliente = (Cliente) session.getAttribute("cliente");
-        if (cliente != null && cliente.getEnderecoFaturamento() != null) {
-            model.addAttribute("endereco", cliente.getEnderecoFaturamento());
-            return "editarEnderecoFaturamento";  // Exibe a página para edição do endereço de faturamento
+        if (cliente != null) {
+            model.addAttribute("endereco", new EnderecoEntrega());  // Cria um novo objeto para o formulário
+            return "editarEnderecosEntrega";  // Exibe o formulário de adição
         }
-        return "redirect:/loginCliente";  // Redireciona para o login se não encontrar o cliente ou o endereço
+        return "redirect:/loginCliente";  // Redireciona se não houver cliente na sessão
     }
 
+    // Exibe o formulário para editar o endereço de entrega
     @GetMapping("/editarEnderecosEntrega/{id}")
     public String editarEnderecoEntrega(@PathVariable("id") int id, HttpSession session, Model model) {
         Cliente cliente = (Cliente) session.getAttribute("cliente");
@@ -99,76 +107,113 @@ public class AlterarClienteController {
         return "redirect:/loginCliente";
     }
 
+    // Exibe o formulário de alteração do endereço de faturamento
+    @GetMapping("/editarEnderecoFaturamento/{id}")
+    public String editarEnderecoFaturamento(@PathVariable("id") int id, HttpSession session, Model model) {
+        Cliente cliente = (Cliente) session.getAttribute("cliente");
+
+        if (cliente != null) {
+            EnderecoFaturamento enderecoFaturamento = cliente.getEnderecoFaturamento();
+
+            if (enderecoFaturamento != null && enderecoFaturamento.getIdEnderecoFaturamento() == id) {
+                model.addAttribute("endereco", enderecoFaturamento);
+                return "editarEnderecoFaturamento";  // Exibe o formulário para editar o endereço de faturamento
+            } else {
+                // Se o endereço de faturamento não for encontrado
+                return "redirect:/perfilCliente";  // Redireciona para o perfil do cliente
+            }
+        }
+        return "redirect:/loginCliente";  // Se o cliente não estiver na sessão
+    }
+
+
 
 
     @PostMapping("/alterarEnderecoEntrega")
     @Transactional
     public String alterarEnderecoEntrega(@ModelAttribute("endereco") EnderecoEntrega enderecoAlterado, HttpSession session) {
-        System.out.println("Endereço alterado recebido: " + enderecoAlterado);
-
         Cliente cliente = (Cliente) session.getAttribute("cliente");
         if (cliente != null) {
-            // Encontre o endereço de entrega que será alterado
-            EnderecoEntrega endereco = cliente.getEnderecosEntrega().stream()
-                    .filter(e -> e.getIdEndereco() == enderecoAlterado.getIdEndereco())
-                    .findFirst()
-                    .orElse(null);
+            // Buscando o cliente novamente no banco de dados para garantir que ele esteja no contexto de persistência
+            cliente = clienteRepository.findById(cliente.getIdCliente()).orElse(null);
 
-            if (endereco != null) {
-                // Atualiza o endereço com os novos dados
-                endereco.setCep(enderecoAlterado.getCep());
-                endereco.setLogradouro(enderecoAlterado.getLogradouro());
-                endereco.setNumero(enderecoAlterado.getNumero());
-                endereco.setComplemento(enderecoAlterado.getComplemento());
-                endereco.setBairro(enderecoAlterado.getBairro());
-                endereco.setCidade(enderecoAlterado.getCidade());
-                endereco.setUf(enderecoAlterado.getUf());
+            if (cliente != null) {
+                // Verifica se o endereço já existe ou é um novo
+                EnderecoEntrega enderecoExistente = null;
+                if (enderecoAlterado.getIdEndereco() != 0) {
+                    // Se o endereço já existir, apenas atualiza
+                    enderecoExistente = cliente.getEnderecosEntrega().stream()
+                            .filter(e -> e.getIdEndereco() == enderecoAlterado.getIdEndereco())
+                            .findFirst()
+                            .orElse(null);
+                }
 
-                // Salva as alterações no banco de dados
-                enderecoEntregaRepository.save(endereco);  // Salva o endereço modificado
-                System.out.println("Endereço alterado e salvo: " + endereco);
+                if (enderecoExistente != null) {
+                    // Atualiza o endereço existente
+                    enderecoExistente.setCep(enderecoAlterado.getCep());
+                    enderecoExistente.setLogradouro(enderecoAlterado.getLogradouro());
+                    enderecoExistente.setNumero(enderecoAlterado.getNumero());
+                    enderecoExistente.setComplemento(enderecoAlterado.getComplemento());
+                    enderecoExistente.setBairro(enderecoAlterado.getBairro());
+                    enderecoExistente.setCidade(enderecoAlterado.getCidade());
+                    enderecoExistente.setUf(enderecoAlterado.getUf());
+                } else {
+                    // Verificar duplicidade com base em atributos relevantes (como logradouro, número, etc.)
+                    boolean enderecoDuplicado = cliente.getEnderecosEntrega().stream()
+                            .anyMatch(e -> e.getCep().equals(enderecoAlterado.getCep()) &&
+                                    e.getLogradouro().equals(enderecoAlterado.getLogradouro()) &&
+                                    e.getNumero().equals(enderecoAlterado.getNumero()));
 
-                // Atualiza o cliente na sessão (apenas se necessário)
+                    if (!enderecoDuplicado) {
+                        // Adiciona um novo endereço à lista se não for duplicado
+                        enderecoAlterado.setCliente(cliente); // Define o cliente no novo endereço
+                        enderecoAlterado.setTipoEndereco(TipoEndereco.ENTREGA);  // Aqui atribuímos o tipo de endereço como ENTREGA
+
+                        cliente.getEnderecosEntrega().add(enderecoAlterado);
+                    } else {
+                        // Se o endereço for duplicado, você pode lançar um erro ou apenas ignorar a adição
+                        return "redirect:/erroEnderecoDuplicado";  // Um exemplo de redirecionamento para uma página de erro
+                    }
+                }
+
+                // Salva o cliente e os endereços juntos
+                clienteRepository.save(cliente); // Salva o cliente e seus endereços (não precisa salvar o endereço individualmente)
+
+                // Atualiza a sessão com o cliente modificado
                 session.setAttribute("cliente", cliente);
 
                 // Redireciona para a página do perfil do cliente
                 return "redirect:/perfilCliente";
-            } else {
-                System.out.println("Endereço não encontrado com ID: " + enderecoAlterado.getIdEndereco());
-                return "redirect:/loginCliente";
             }
         }
         return "redirect:/loginCliente";
     }
 
-    // Salva as alterações do endereço de faturamento
+    // Método para salvar as alterações no endereço de faturamento
     @PostMapping("/alterarEnderecoFaturamento")
     @Transactional
     public String alterarEnderecoFaturamento(@ModelAttribute("endereco") EnderecoFaturamento enderecoAlterado, HttpSession session) {
         Cliente cliente = (Cliente) session.getAttribute("cliente");
+
         if (cliente != null) {
-            // Encontra o endereço de faturamento e atualiza os dados (sem o tipoEndereco)
-            EnderecoFaturamento endereco = cliente.getEnderecoFaturamento();
+            EnderecoFaturamento enderecoFaturamento = cliente.getEnderecoFaturamento();
 
-            if (endereco != null) {
-                endereco.setCep(enderecoAlterado.getCep());
-                endereco.setLogradouro(enderecoAlterado.getLogradouro());
-                endereco.setNumero(enderecoAlterado.getNumero());
-                endereco.setComplemento(enderecoAlterado.getComplemento());
-                endereco.setBairro(enderecoAlterado.getBairro());
-                endereco.setCidade(enderecoAlterado.getCidade());
-                endereco.setUf(enderecoAlterado.getUf());
+            if (enderecoFaturamento != null) {
+                // Atualiza os dados do endereço de faturamento
+                enderecoFaturamento.setCep(enderecoAlterado.getCep());
+                enderecoFaturamento.setLogradouro(enderecoAlterado.getLogradouro());
+                enderecoFaturamento.setNumero(enderecoAlterado.getNumero());
+                enderecoFaturamento.setComplemento(enderecoAlterado.getComplemento());
+                enderecoFaturamento.setBairro(enderecoAlterado.getBairro());
+                enderecoFaturamento.setCidade(enderecoAlterado.getCidade());
+                enderecoFaturamento.setUf(enderecoAlterado.getUf());
 
-                enderecoFaturamentoRepository.save(endereco); // Salva as alterações
+                enderecoFaturamentoRepository.save(enderecoFaturamento);  // Salva as alterações
 
-                session.setAttribute("cliente", cliente); // Atualiza a sessão
-
-                return "redirect:/perfilCliente"; // Redireciona
+                session.setAttribute("cliente", cliente);  // Atualiza a sessão com os dados alterados do cliente
+                return "redirect:/perfilCliente";  // Redireciona para o perfil do cliente
             }
         }
-        return "redirect:/loginCliente"; // Caso o cliente não esteja na sessão
+        return "redirect:/loginCliente";  // Se o cliente não estiver na sessão
     }
-
-
-
 }

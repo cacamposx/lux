@@ -39,18 +39,6 @@
     </div>
     <button type="submit">Salvar Alterações</button>
 
-    <div>
-        <a href="/editarEnderecoFaturamento" class="btn">Editar Endereço de Faturamento</a>
-    </div>
-
-    <div th:if="${#lists.isEmpty(enderecosEntrega)}">
-        <p>Você não tem endereços de entrega cadastrados.</p>
-    </div>
-
-    <div th:each="endereco : ${enderecosEntrega}">
-        <a th:href="@{/editarEnderecosEntrega/{id}(id=${endereco.idEndereco})}" class="btn">Editar Endereço de Entrega</a>
-    </div>
-
 </form>
 
 </body>
