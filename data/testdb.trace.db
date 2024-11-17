@@ -4104,15 +4104,3 @@ org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
-2024-11-16 23:42:12.163355-03:00 jdbc[13]: exception
-org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]TB_ENDERECO_ENTREGA"; expected "TRUNCATE"; SQL statement:
-TB_ENDERECO_ENTREGA [42001-224]
-2024-11-17 00:52:32.041094-03:00 jdbc[13]: exception
-org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * [*]FROMTB_PEDIDO"; SQL statement:
-SELECT * FROMTB_PEDIDO [42000-224]
-2024-11-17 00:57:52.601107-03:00 jdbc[13]: exception
-org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * [*]FROMTB_ENDERECO_FATURAMENTO"; SQL statement:
-SELECT * FROMTB_ENDERECO_FATURAMENTO [42000-224]
-2024-11-17 01:05:11.390983-03:00 jdbc[13]: exception
-org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]TB_CLIENTE"; expected "TRUNCATE"; SQL statement:
-TB_CLIENTE [42001-224]
