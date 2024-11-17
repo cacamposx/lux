@@ -91,6 +91,14 @@ public class PedidoController {
         pedido.setFormaPagamento(formaPagamento);
         pedido.setFrete(freteEscolhido);
 
+        if (pedido.getData() == null) {
+            pedido.setData(LocalDate.now()); // Define a data atual se estiver nula
+        }
+
+        if (pedido.getStatus() == null) {
+            pedido.setStatus("Aguardando pagamento"); // Definindo o status inicial
+        }
+
         // Calcula o valor total
         double totalCarrinho = carrinho.stream()
                 .mapToDouble(ItemCarrinho::getTotal)

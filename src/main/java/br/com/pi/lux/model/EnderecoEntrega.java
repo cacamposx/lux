@@ -9,7 +9,7 @@ public class EnderecoEntrega {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idEndereco;
+    private int idEnderecoEntrega;
 
     @Column(nullable = false)
     private String cep;
@@ -43,8 +43,8 @@ public class EnderecoEntrega {
     public EnderecoEntrega(){
 
     }
-    public EnderecoEntrega(int idEndereco, String cep, String logradouro, String numero, String complemento, String bairro, String cidade, String uf, Cliente cliente, TipoEndereco tipoEndereco) {
-        this.idEndereco = idEndereco;
+    public EnderecoEntrega(int idEnderecoEntrega, String cep, String logradouro, String numero, String complemento, String bairro, String cidade, String uf, Cliente cliente, TipoEndereco tipoEndereco) {
+        this.idEnderecoEntrega = idEnderecoEntrega;
         this.cep = cep;
         this.logradouro = logradouro;
         this.numero = numero;
@@ -57,11 +57,11 @@ public class EnderecoEntrega {
     }
 
     public int getIdEndereco() {
-        return idEndereco;
+        return idEnderecoEntrega;
     }
 
-    public void setIdEndereco(int idEndereco) {
-        this.idEndereco = idEndereco;
+    public void setIdEndereco(int idEnderecoEntrega) {
+        this.idEnderecoEntrega = idEnderecoEntrega;
     }
 
     public String getCep() {

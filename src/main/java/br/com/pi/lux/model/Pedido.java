@@ -48,9 +48,9 @@ public class Pedido {
         this.cliente = cliente;
         this.enderecoEntrega = enderecoEntrega;
         this.itens = (itens == null) ? new ArrayList<>() : itens; // Inicializa a lista se for nula
-        this.status = status;
+        this.status = (status == null || status.isEmpty()) ? "Aguardando Pagamento" : status; // Definindo status padrão
         this.formaPagamento = formaPagamento;
-        this.data = data;
+        this.data = LocalDate.now();
         this.valorTotal = valorTotal;
     }
 
