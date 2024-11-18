@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/meusPedidos.css">
+    <title>Meus Pedidos</title>
+</head>
+<body>
+<div class="container">
+    <h1>Pedidos de: <span th:text="${cliente.nome}"></span></h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID Pedido</th>
+            <th>Data</th>
+            <th>Forma de Pagamento</th>
+            <th>Status</th>
+            <th>Valor Total</th>
+            <th>Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr th:each="pedido : ${pedidos}">
+            <td th:text="${pedido.idPedido}"></td>
+            <td th:text="${pedido.data}"></td>
+            <td th:text="${pedido.formaPagamento}"></td>
+            <td th:text="${pedido.status}"></td>
+            <td th:text="${pedido.valorTotal}"></td>
+            <td>
+                <!-- Botão para visualizar os itens do pedido -->
+                <a href="/pedido/${pedido.idPedido}" class="btn btn-view">Ver Detalhes</a>
+            </td>
+        </tr>
+
+        <tr th:if="${#lists.isEmpty(pedidos)}">
+            <td colspan="6" style="text-align: center;">Nenhum pedido encontrado.</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="text-center">
+        <a href="/homeEcommerce" class="btn btn-back">Voltar à Home</a>
+    </div>
+</div>
+</body>
+</html>

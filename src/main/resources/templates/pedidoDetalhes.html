@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/meusPedidos.css">
+  <title>Detalhes do Pedido</title>
+</head>
+<body>
+<div class="container">
+  <h1>Detalhes do Pedido <span th:text="${pedido.idPedido}"></span></h1>
+
+  <div>
+    <h3>Informações do Pedido</h3>
+    <p><strong>Data:</strong> <span th:text="${pedido.data}"></span></p>
+    <p><strong>Forma de Pagamento:</strong> <span th:text="${pedido.formaPagamento}"></span></p>
+    <p><strong>Status:</strong> <span th:text="${pedido.status}"></span></p>
+    <p><strong>Valor Total:</strong> <span th:text="${pedido.valorTotal}"></span></p>
+  </div>
+
+  <div>
+    <h3>Endereço de Entrega</h3>
+    <p><strong>Endereço:</strong> <span th:text="${pedido.enderecoEntrega.endereco}"></span></p>
+    <p><strong>Cidade:</strong> <span th:text="${pedido.enderecoEntrega.cidade}"></span></p>
+    <p><strong>CEP:</strong> <span th:text="${pedido.enderecoEntrega.cep}"></span></p>
+  </div>
+
+  <div>
+    <h3>Itens do Pedido</h3>
+    <table>
+      <thead>
+      <tr>
+        <th>Produto</th>
+        <th>Quantidade</th>
+        <th>Preço Unitário</th>
+        <th>Subtotal</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="item : ${pedido.itens}">
+        <td th:text="${item.produto.nome}"></td>
+        <td th:text="${item.quantidade}"></td>
+        <td th:text="${item.preco}"></td>
+        <td th:text="${item.total}"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="text-center">
+    <a href="/meusPedidos" class="btn btn-back">Voltar à lista de pedidos</a>
+  </div>
+</div>
+</body>
+</html>

@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -65,9 +66,9 @@ public class PedidoController {
     public String finalizarPedido(@RequestParam("frete") double freteEscolhido,
                                   @RequestParam("formaPagamento") String formaPagamento,
                                   @RequestParam("enderecoEntrega") int idEnderecoEntrega,
-                                  @RequestParam(value = "numeroCartao", required = false) String numeroCartao,  // Recebe o número do cartão
-                                  @RequestParam(value = "validadeCartao", required = false) String validadeCartao,  // Recebe validade do cartão
-                                  @RequestParam(value = "codigoSeguranca", required = false) String codigoSeguranca,  // Recebe CVV
+                                  @RequestParam(value = "numeroCartao", required = false) String numeroCartao,
+                                  @RequestParam(value = "validadeCartao", required = false) String validadeCartao,
+                                  @RequestParam(value = "codigoSeguranca", required = false) String codigoSeguranca,
                                   HttpSession session,
                                   Model model) {
         // Obtém o cliente da sessão
@@ -120,11 +121,14 @@ public class PedidoController {
             pedido.adicionarItem(itemPedido); // Adiciona o item ao pedido
         }
 
-        // Se o pagamento for com cartão, armazena as informações
+        // Para qualquer forma de pagamento (cartão, boleto, pix), o pedido será finalizado
         if (formaPagamento.equals("cartao")) {
-            // Aqui você pode armazenar as últimas 4 cifras do cartão para exibir na página de resumo
+            // Se o pagamento for com cartão, armazena as últimas 4 cifras do cartão para exibir na página de resumo
             String ultimoCartao = numeroCartao.substring(numeroCartao.length() - 4);
             model.addAttribute("numeroCartao", ultimoCartao); // Apenas os últimos 4 números do cartão
+        } else {
+            // Se o pagamento for com boleto ou pix, não há necessidade de mais dados
+            model.addAttribute("numeroCartao", "Não aplicável");
         }
 
         // Chama o método correto de finalizarPedido passando os parâmetros necessários
@@ -136,12 +140,40 @@ public class PedidoController {
         // Passa o pedido para a página de resumo
         model.addAttribute("pedido", pedido);
         model.addAttribute("formaPagamento", formaPagamento);
-        model.addAttribute("numeroCartao", numeroCartao); // Envia o número do cartão (últimos 4) se necessário
+        model.addAttribute("numeroCartao", "Não aplicável"); // Sempre "Não aplicável" para formas de pagamento que não sejam cartão
         model.addAttribute("enderecoEntrega", enderecoEntrega); // Envia o endereço escolhido
 
         // Redireciona para a página de resumo
-        return "resumoPedido";
+        return "redirect:/meusPedidos";
     }
+
+
+    @GetMapping("/meusPedidos")
+    public String exibirMeusPedidos(HttpSession session, Model model) {
+        // Obtém o cliente da sessão
+        Cliente cliente = (Cliente) session.getAttribute("cliente");
+
+        if (cliente == null) {
+            // Se o cliente não estiver logado, redireciona para o login
+            return "redirect:/loginCliente";
+        }
+
+        // Busca todos os pedidos do cliente
+        List<Pedido> pedidos = pedidoService.buscarPedidosPorCliente(cliente);
+
+        // Adiciona os pedidos ao modelo para exibição na página
+        model.addAttribute("pedidos", pedidos);
+        model.addAttribute("cliente", cliente);
+
+        // Log para verificar se os pedidos estão sendo encontrados
+        System.out.println("Pedidos encontrados: " + pedidos.size());
+
+        // Redireciona para a página que lista os pedidos
+        return "meusPedidos";  // O nome da página Thymeleaf que exibe os pedidos
+    }
+
+
+
 
 
 }

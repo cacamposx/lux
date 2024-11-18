@@ -1,5 +1,6 @@
 package br.com.pi.lux.service;
 
+import br.com.pi.lux.model.Cliente;
 import br.com.pi.lux.model.Pedido;
 import br.com.pi.lux.model.EnderecoEntrega;
 import br.com.pi.lux.model.ItemPedido;
@@ -9,6 +10,7 @@ import br.com.pi.lux.repository.ItemPedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -69,4 +71,10 @@ public class PedidoService {
     public void calcularValorTotal(Pedido pedido) {
         pedido.calcularValorTotal(); // Chama o método do modelo Pedido para recalcular o valor total
     }
+
+    public List<Pedido> buscarPedidosPorCliente(Cliente cliente) {
+        return pedidoRepository.findByCliente(cliente);
+    }
+
+
 }

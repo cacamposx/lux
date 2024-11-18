@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -29,13 +29,14 @@
 
         <h3>Itens do Pedido:</h3>
         <ul>
-            <li th:each="item : ${pedido.itens}">
+            <li th:each="item : ${pedido.itens}" th:if="${pedido.itens != null}">
                 <span th:text="${item.produto.nome}"></span> -
                 <span th:text="${item.quantidade}"></span> x
                 <span th:text="${item.produto.preco}"></span>
                 = <span th:text="${item.total}"></span>
             </li>
         </ul>
+
 
         <p><strong>Valor Total:</strong> <span th:text="${pedido.valorTotal}"></span></p>
         <p><strong>Frete Escolhido:</strong> <span th:text="${pedido.frete}"></span></p>
@@ -45,7 +46,7 @@
     <div class="endereco-info">
         <h2>Endereço de Entrega</h2>
         <p><strong>Endereço:</strong>
-            <span th:text="${enderecoEntrega.complemento + ', ' + enderecoEntrega.bairro + ' - ' + enderecoEntrega.logradouro}"></span></p>
+            <span th:text="${enderecoEntrega}"></span></p>
     </div>
 
     <br>
