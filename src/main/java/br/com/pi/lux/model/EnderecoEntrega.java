@@ -43,6 +43,7 @@ public class EnderecoEntrega {
     public EnderecoEntrega(){
 
     }
+
     public EnderecoEntrega(int idEnderecoEntrega, String cep, String logradouro, String numero, String complemento, String bairro, String cidade, String uf, Cliente cliente, TipoEndereco tipoEndereco) {
         this.idEnderecoEntrega = idEnderecoEntrega;
         this.cep = cep;
@@ -56,11 +57,11 @@ public class EnderecoEntrega {
         this.tipoEndereco = tipoEndereco;
     }
 
-    public int getIdEndereco() {
+    public int getIdEnderecoEntrega() {
         return idEnderecoEntrega;
     }
 
-    public void setIdEndereco(int idEnderecoEntrega) {
+    public void setIdEnderecoEntrega(int idEnderecoEntrega) {
         this.idEnderecoEntrega = idEnderecoEntrega;
     }
 

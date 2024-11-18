@@ -7,11 +7,11 @@
 </head>
 <body>
 
-<h2 th:text="${endereco.idEndereco == null ? 'Adicionar Novo Endereço de Entrega' : 'Editar Endereço de Entrega'}"></h2>
+<h2 th:text="${endereco.idEnderecoEntrega == null ? 'Adicionar Novo Endereço de Entrega' : 'Editar Endereço de Entrega'}"></h2>
 
 <!-- Formulário para editar ou adicionar um endereço -->
 <form th:action="@{/alterarEnderecoEntrega}" method="post" th:object="${endereco}">
-    <input type="hidden" th:field="*{idEndereco}" />
+    <input type="hidden" th:field="*{idEnderecoEntrega}" />
 
     <div>
         <label for="cep">CEP:</label>

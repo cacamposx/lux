@@ -2,7 +2,7 @@ package br.com.pi.lux.controller;
 
 import br.com.pi.lux.model.*;
 import br.com.pi.lux.service.PedidoService;
-import br.com.pi.lux.service.EnderecoEntregaService; // Supondo que você tenha um serviço para buscar o EnderecoEntrega
+import br.com.pi.lux.service.EnderecoEntregaService;
 import org.springframework.ui.Model;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,16 +30,14 @@ public class PedidoController {
         Cliente cliente = (Cliente) session.getAttribute("cliente");
 
         if (cliente == null) {
-            // Se o cliente não estiver logado, redireciona para o login
-            return "redirect:/loginCliente";
+            return "redirect:/loginCliente";  // Redireciona para login se cliente não estiver logado
         }
 
-        // Obtém o carrinho da sessão com segurança
+        // Obtém o carrinho da sessão
         List<ItemCarrinho> carrinho = (List<ItemCarrinho>) session.getAttribute("carrinho");
 
-        // Verifica se o carrinho não é nulo e não está vazio
         if (carrinho == null || carrinho.isEmpty()) {
-            return "redirect:/carrinho"; // Redireciona se o carrinho estiver vazio ou não existir
+            return "redirect:/carrinho";  // Redireciona se o carrinho estiver vazio
         }
 
         // Calcula o total do carrinho
@@ -49,9 +47,9 @@ public class PedidoController {
 
         // Cria o pedido e associa o cliente a ele
         Pedido pedido = new Pedido();
-        pedido.setCliente(cliente); // Aqui associamos o cliente ao pedido
-        pedido.setValorTotal(totalCarrinho); // Define o valor total do pedido
-        pedido.setFormaPagamento(""); // A forma de pagamento será escolhida no formulário
+        pedido.setCliente(cliente);
+        pedido.setValorTotal(totalCarrinho);
+        pedido.setFormaPagamento("");  // Forma de pagamento ainda não escolhida
 
         model.addAttribute("carrinho", carrinho);
         model.addAttribute("totalCarrinho", totalCarrinho);
@@ -59,8 +57,6 @@ public class PedidoController {
 
         return "finalizarCompra";
     }
-
-
 
     @PostMapping("/finalizarPedido")
     public String finalizarPedido(@RequestParam("frete") double freteEscolhido,
@@ -71,11 +67,10 @@ public class PedidoController {
                                   @RequestParam(value = "codigoSeguranca", required = false) String codigoSeguranca,
                                   HttpSession session,
                                   Model model) {
-        // Obtém o cliente da sessão
+
         Cliente cliente = (Cliente) session.getAttribute("cliente");
 
         if (cliente == null) {
-            // Se o cliente não estiver logado, redireciona para a página de login
             return "redirect:/loginCliente";
         }
 
@@ -83,21 +78,21 @@ public class PedidoController {
         List<ItemCarrinho> carrinho = (List<ItemCarrinho>) session.getAttribute("carrinho");
 
         if (carrinho == null || carrinho.isEmpty()) {
-            return "redirect:/carrinho"; // Se o carrinho estiver vazio, redireciona para o carrinho
+            return "redirect:/carrinho";
         }
 
         // Cria o pedido
         Pedido pedido = new Pedido();
-        pedido.setCliente(cliente); // Atribui o cliente ao pedido
+        pedido.setCliente(cliente);
         pedido.setFormaPagamento(formaPagamento);
         pedido.setFrete(freteEscolhido);
 
         if (pedido.getData() == null) {
-            pedido.setData(LocalDate.now()); // Define a data atual se estiver nula
+            pedido.setData(LocalDate.now());
         }
 
         if (pedido.getStatus() == null) {
-            pedido.setStatus("Aguardando pagamento"); // Definindo o status inicial
+            pedido.setStatus("Aguardando pagamento");
         }
 
         // Calcula o valor total
@@ -118,63 +113,58 @@ public class PedidoController {
         for (ItemCarrinho item : carrinho) {
             Produto produto = item.getProduto();
             ItemPedido itemPedido = new ItemPedido(pedido, produto, item.getQuantidade(), produto.getPreco());
-            pedido.adicionarItem(itemPedido); // Adiciona o item ao pedido
+            pedido.adicionarItem(itemPedido);
         }
 
-        // Para qualquer forma de pagamento (cartão, boleto, pix), o pedido será finalizado
+        // Lógica para pagamento
         if (formaPagamento.equals("cartao")) {
-            // Se o pagamento for com cartão, armazena as últimas 4 cifras do cartão para exibir na página de resumo
+            // Processamento para pagamento com cartão
             String ultimoCartao = numeroCartao.substring(numeroCartao.length() - 4);
-            model.addAttribute("numeroCartao", ultimoCartao); // Apenas os últimos 4 números do cartão
+            model.addAttribute("numeroCartao", ultimoCartao);  // Exibe os últimos 4 dígitos do cartão
+        } else if (formaPagamento.equals("boleto")) {
+            // Gerar código de boleto fictício
+            String codigoBoleto = gerarCodigoBoleto();
+            model.addAttribute("numeroCartao", "Pagamento via boleto");
+            model.addAttribute("codigoBoleto", codigoBoleto);  // Passa o código do boleto para o modelo
         } else {
-            // Se o pagamento for com boleto ou pix, não há necessidade de mais dados
             model.addAttribute("numeroCartao", "Não aplicável");
         }
 
-        // Chama o método correto de finalizarPedido passando os parâmetros necessários
+        // Finaliza o pedido
         pedidoService.finalizarPedido(pedido, freteEscolhido, formaPagamento, idEnderecoEntrega);
-
-        // Limpa o carrinho da sessão
         session.removeAttribute("carrinho");
 
-        // Passa o pedido para a página de resumo
         model.addAttribute("pedido", pedido);
         model.addAttribute("formaPagamento", formaPagamento);
-        model.addAttribute("numeroCartao", "Não aplicável"); // Sempre "Não aplicável" para formas de pagamento que não sejam cartão
-        model.addAttribute("enderecoEntrega", enderecoEntrega); // Envia o endereço escolhido
+        model.addAttribute("numeroCartao", "Não aplicável");
+        model.addAttribute("enderecoEntrega", enderecoEntrega);
 
-        // Redireciona para a página de resumo
         return "redirect:/meusPedidos";
     }
 
+    // Método fictício para gerar código de boleto
+    private String gerarCodigoBoleto() {
+        // Aqui você poderia gerar um código de boleto ou link de pagamento real
+        return "BOLETO-1234567890";  // Exemplo de código fictício
+    }
 
     @GetMapping("/meusPedidos")
     public String exibirMeusPedidos(HttpSession session, Model model) {
-        // Obtém o cliente da sessão
         Cliente cliente = (Cliente) session.getAttribute("cliente");
 
         if (cliente == null) {
-            // Se o cliente não estiver logado, redireciona para o login
             return "redirect:/loginCliente";
         }
 
-        // Busca todos os pedidos do cliente
         List<Pedido> pedidos = pedidoService.buscarPedidosPorCliente(cliente);
 
-        // Adiciona os pedidos ao modelo para exibição na página
+        if (pedidos.isEmpty()) {
+            model.addAttribute("mensagem", "Você não possui pedidos.");
+        }
+
         model.addAttribute("pedidos", pedidos);
         model.addAttribute("cliente", cliente);
 
-        // Log para verificar se os pedidos estão sendo encontrados
-        System.out.println("Pedidos encontrados: " + pedidos.size());
-
-        // Redireciona para a página que lista os pedidos
-        return "meusPedidos";  // O nome da página Thymeleaf que exibe os pedidos
+        return "meusPedidos";  // Página que exibe os pedidos
     }
-
-
-
-
-
 }
-

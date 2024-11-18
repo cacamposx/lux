@@ -86,11 +86,6 @@ public class CadastrarClienteController {
     }
 
 
-
-
-
-
-
     @PostMapping("/preencherEndereco")
     @ResponseBody
     public EnderecoEntrega preencherEndereco(@RequestParam String cep) {

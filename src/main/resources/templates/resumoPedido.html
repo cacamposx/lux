@@ -13,44 +13,37 @@
 
     <!-- Informações do Cliente -->
     <div class="cliente-info">
-        <h2>Cliente</h2>
+        <h3>Informações do Cliente</h3>
         <p><strong>Nome:</strong> <span th:text="${pedido.cliente.nome}"></span></p>
+        <p><strong>Email:</strong> <span th:text="${pedido.cliente.email}"></span></p>
     </div>
 
     <!-- Informações do Pedido -->
     <div class="pedido-info">
-        <h2>Informações do Pedido</h2>
-        <p><strong>Data:</strong> <span th:text="${#dates.format(pedido.data, 'dd/MM/yyyy')}"></span></p> <!-- Formatação da data -->
-        <p><strong>Status:</strong> <span th:text="${pedido.status}"></span></p>
-        <p><strong>Forma de Pagamento:</strong> <span th:text="${formaPagamento}"></span></p>
-
-        <!-- Mostrar os últimos 4 números do cartão -->
-        <p><strong>Cartão de Crédito (últimos 4 dígitos):</strong> <span th:text="${numeroCartao}"></span></p>
-
-        <h3>Itens do Pedido:</h3>
-        <ul>
-            <li th:each="item : ${pedido.itens}" th:if="${pedido.itens != null}">
-                <span th:text="${item.produto.nome}"></span> -
-                <span th:text="${item.quantidade}"></span> x
-                <span th:text="${item.produto.preco}"></span>
-                = <span th:text="${item.total}"></span>
-            </li>
-        </ul>
-
-
-        <p><strong>Valor Total:</strong> <span th:text="${pedido.valorTotal}"></span></p>
-        <p><strong>Frete Escolhido:</strong> <span th:text="${pedido.frete}"></span></p>
+        <h3>Detalhes do Pedido</h3>
+        <p><strong>ID do Pedido:</strong> <span th:text="${pedido.id}"></span></p>
+        <p><strong>Data do Pedido:</strong> <span th:text="${#dates.format(pedido.data, 'dd/MM/yyyy')}"></span></p>
+        <p><strong>Total:</strong> <span th:text="${pedido.valorTotal}"></span></p>
     </div>
 
     <!-- Endereço de Entrega -->
     <div class="endereco-info">
-        <h2>Endereço de Entrega</h2>
+        <h3>Endereço de Entrega</h3>
         <p><strong>Endereço:</strong>
-            <span th:text="${enderecoEntrega}"></span></p>
+            <span th:text="${enderecoEntrega.logradouro + ', ' + enderecoEntrega.numero + ', ' + enderecoEntrega.bairro + ' - ' + enderecoEntrega.cidade + ' / ' + enderecoEntrega.uf}"></span>
+        </p>
     </div>
 
-    <br>
-    <a href="/home">Voltar para a página inicial</a>
+    <!-- Forma de Pagamento -->
+    <div class="pagamento-info">
+        <h3>Forma de Pagamento</h3>
+        <p><strong>Forma de Pagamento:</strong> <span th:text="${pedido.formaPagamento}"></span></p>
+        <p><strong>Cartão:</strong> <span th:text="${numeroCartao}"></span></p>
+    </div>
+
+    <div>
+        <a href="/meusPedidos">Ver meus pedidos</a>
+    </div>
 </div>
 
 </body>

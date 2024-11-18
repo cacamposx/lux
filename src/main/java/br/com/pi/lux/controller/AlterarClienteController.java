@@ -93,7 +93,7 @@ public class AlterarClienteController {
         Cliente cliente = (Cliente) session.getAttribute("cliente");
         if (cliente != null) {
             EnderecoEntrega endereco = cliente.getEnderecosEntrega().stream()
-                    .filter(e -> e.getIdEndereco() == id)
+                    .filter(e -> e.getIdEnderecoEntrega() == id)
                     .findFirst()
                     .orElse(null);
 
@@ -140,10 +140,10 @@ public class AlterarClienteController {
             if (cliente != null) {
                 // Verifica se o endereço já existe ou é um novo
                 EnderecoEntrega enderecoExistente = null;
-                if (enderecoAlterado.getIdEndereco() != 0) {
+                if (enderecoAlterado.getIdEnderecoEntrega() != 0) {
                     // Se o endereço já existir, apenas atualiza
                     enderecoExistente = cliente.getEnderecosEntrega().stream()
-                            .filter(e -> e.getIdEndereco() == enderecoAlterado.getIdEndereco())
+                            .filter(e -> e.getIdEnderecoEntrega() == enderecoAlterado.getIdEnderecoEntrega())
                             .findFirst()
                             .orElse(null);
                 }

@@ -5,7 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finalizar Compra</title>
-
 </head>
 <body>
 
@@ -15,7 +14,7 @@
     <div class="pedido-info">
         <h2>Resumo do Pedido</h2>
         <p><strong>Cliente:</strong> <span th:text="${pedido.cliente.nome}"></span></p>
-        <p><strong>Data:</strong> <span th:text="${#dates.format(pedido.data, 'dd/MM/yyyy')}"></span></p> <!-- Formatação da data -->
+        <p><strong>Data:</strong> <span th:text="${#dates.format(pedido.data, 'dd/MM/yyyy')}"></span></p>
 
         <h3>Itens do Pedido:</h3>
         <ul>
@@ -33,11 +32,9 @@
     <div class="formulario">
         <h2>Escolha o Frete e Forma de Pagamento</h2>
 
-        <!-- Formulário para finalizar a compra -->
         <form action="/finalizarPedido" method="post">
             <input type="hidden" name="pedido.idPedido" th:value="${pedido.idPedido}">
 
-            <!-- Campo de escolha do frete -->
             <label for="frete">Escolha o Frete:</label>
             <select name="frete" id="frete" required>
                 <option value="10.00">Frete Standard (R$ 10,00)</option>
@@ -47,7 +44,6 @@
 
             <br><br>
 
-            <!-- Campo de escolha da forma de pagamento -->
             <label for="formaPagamento">Forma de Pagamento:</label>
             <select name="formaPagamento" id="formaPagamento" required onchange="mostrarCamposCartao()">
                 <option value="cartao">Cartão de Crédito</option>
@@ -57,29 +53,23 @@
 
             <br><br>
 
-            <!-- Campos de pagamento para Cartão de Crédito (invisíveis por padrão) -->
             <div id="camposCartao" style="display: none;">
                 <label for="numeroCartao">Número do Cartão:</label>
                 <input type="text" name="numeroCartao" id="numeroCartao" placeholder="XXXX XXXX XXXX XXXX" required>
-
                 <br><br>
-
                 <label for="validadeCartao">Validade (MM/AA):</label>
                 <input type="text" name="validadeCartao" id="validadeCartao" placeholder="MM/AA" required>
-
                 <br><br>
-
                 <label for="codigoSeguranca">Código de Segurança:</label>
                 <input type="text" name="codigoSeguranca" id="codigoSeguranca" placeholder="CVV" required>
             </div>
 
             <br><br>
 
-            <!-- Campo para escolher o endereço de entrega -->
             <label for="enderecoEntrega">Escolha o Endereço de Entrega:</label>
             <select name="enderecoEntrega" id="enderecoEntrega" required>
                 <option th:each="enderecoEntrega : ${pedido.cliente.enderecosEntrega}"
-                        th:value="${enderecoEntrega.idEndereco}"
+                        th:value="${enderecoEntrega.idEnderecoEntrega}"
                         th:text="${enderecoEntrega.logradouro+ ', ' + enderecoEntrega.bairro + ' - ' + enderecoEntrega.cidade}"></option>
             </select>
 
@@ -88,27 +78,22 @@
             <button type="submit">Finalizar Pedido</button>
         </form>
     </div>
+
+    <div th:if="${codigoBoleto != null}">
+        <h3>Pagamento via Boleto</h3>
+        <p><strong>Código do Boleto:</strong> <span th:text="${codigoBoleto}"></span></p>
+    </div>
 </div>
 
-</body>
-
-
 <script>
-    // Função para mostrar/esconder os campos do cartão de crédito
     function mostrarCamposCartao() {
         let formaPagamento = document.getElementById('formaPagamento').value;
         let camposCartao = document.getElementById('camposCartao');
-
-        // Se a forma de pagamento for "cartao", mostra os campos do cartão
-        if (formaPagamento === 'cartao') {
-            camposCartao.style.display = 'block';
-        } else {
-            camposCartao.style.display = 'none';
-        }
+        camposCartao.style.display = formaPagamento === 'cartao' ? 'block' : 'none';
     }
 
-    // Chama a função ao carregar a página e ao mudar a forma de pagamento
-    window.onload = mostrarCamposCartao; // Executa ao carregar a página
+    window.onload = mostrarCamposCartao;
 </script>
 
+</body>
 </html>
