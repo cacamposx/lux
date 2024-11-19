@@ -8,6 +8,8 @@ import br.com.pi.lux.repository.PedidoRepository;
 import br.com.pi.lux.repository.EnderecoEntregaRepository;
 import br.com.pi.lux.repository.ItemPedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -76,5 +78,17 @@ public class PedidoService {
         return pedidoRepository.findByCliente(cliente);
     }
 
+    public List<Pedido> listarPedidos() {
+        return pedidoRepository.findAll(); // Retorna todos os pedidos
+    }
+
+    public Pedido buscarPorId(int id) {
+        Optional<Pedido> pedidoOptional = pedidoRepository.findById(id);
+        return pedidoOptional.orElse(null);
+    }
+
+    public Pedido salvarPedido(Pedido pedido) {
+        return pedidoRepository.save(pedido);
+    }
 
 }

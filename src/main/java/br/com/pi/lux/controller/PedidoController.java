@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 public class PedidoController {
@@ -62,23 +63,19 @@ public class PedidoController {
     public String finalizarPedido(@RequestParam("frete") double freteEscolhido,
                                   @RequestParam("formaPagamento") String formaPagamento,
                                   @RequestParam("enderecoEntrega") int idEnderecoEntrega,
-                                  @RequestParam(value = "numeroCartao", required = false) String numeroCartao,
-                                  @RequestParam(value = "validadeCartao", required = false) String validadeCartao,
-                                  @RequestParam(value = "codigoSeguranca", required = false) String codigoSeguranca,
                                   HttpSession session,
                                   Model model) {
 
+        // Obtém o cliente da sessão
         Cliente cliente = (Cliente) session.getAttribute("cliente");
-
         if (cliente == null) {
-            return "redirect:/loginCliente";
+            return "redirect:/loginCliente";  // Redireciona se o cliente não estiver logado
         }
 
-        // Obtém o carrinho da sessão
+        // Obtém o carrinho de compras da sessão
         List<ItemCarrinho> carrinho = (List<ItemCarrinho>) session.getAttribute("carrinho");
-
         if (carrinho == null || carrinho.isEmpty()) {
-            return "redirect:/carrinho";
+            return "redirect:/carrinho";  // Redireciona se o carrinho estiver vazio
         }
 
         // Cria o pedido
@@ -86,27 +83,21 @@ public class PedidoController {
         pedido.setCliente(cliente);
         pedido.setFormaPagamento(formaPagamento);
         pedido.setFrete(freteEscolhido);
+        pedido.setData(LocalDate.now());
+        pedido.setStatus("Aguardando pagamento");
 
-        if (pedido.getData() == null) {
-            pedido.setData(LocalDate.now());
-        }
-
-        if (pedido.getStatus() == null) {
-            pedido.setStatus("Aguardando pagamento");
-        }
-
-        // Calcula o valor total
+        // Calcula o total do pedido
         double totalCarrinho = carrinho.stream()
                 .mapToDouble(ItemCarrinho::getTotal)
                 .sum();
         pedido.setValorTotal(totalCarrinho + freteEscolhido);
 
-        // Busca o endereço de entrega
+        // Verifica o endereço de entrega
         EnderecoEntrega enderecoEntrega = enderecoEntregaService.buscarPorId(idEnderecoEntrega);
         if (enderecoEntrega != null) {
             pedido.setEnderecoEntrega(enderecoEntrega);
         } else {
-            return "redirect:/erroEndereco";
+            return "redirect:/erroEndereco";  // Redireciona se o endereço não for encontrado
         }
 
         // Adiciona os itens do carrinho ao pedido
@@ -116,37 +107,46 @@ public class PedidoController {
             pedido.adicionarItem(itemPedido);
         }
 
-        // Lógica para pagamento
-        if (formaPagamento.equals("cartao")) {
-            // Processamento para pagamento com cartão
-            String ultimoCartao = numeroCartao.substring(numeroCartao.length() - 4);
-            model.addAttribute("numeroCartao", ultimoCartao);  // Exibe os últimos 4 dígitos do cartão
-        } else if (formaPagamento.equals("boleto")) {
-            // Gerar código de boleto fictício
-            String codigoBoleto = gerarCodigoBoleto();
-            model.addAttribute("numeroCartao", "Pagamento via boleto");
-            model.addAttribute("codigoBoleto", codigoBoleto);  // Passa o código do boleto para o modelo
+        // Variáveis para mensagens e detalhes do pagamento
+        String mensagemPagamento = null;
+        String detalhePagamento = null;
+
+        // Lógica de acordo com a forma de pagamento
+        System.out.println("Forma de Pagamento recebida: " + formaPagamento);  // Debug log
+
+        if ("cartao".equals(formaPagamento)) {
+            // Mensagem específica para pagamento com cartão
+            mensagemPagamento = "Pagamento realizado com cartão.";
+            detalhePagamento = "Não aplicável"; // Pode-se adicionar detalhes como as últimas 4 cifras do cartão, se necessário
+        } else if ("boleto".equals(formaPagamento)) {
+            // Pagamento via boleto, sem necessidade de gerar UUID
+            detalhePagamento = "Boleto gerado com sucesso.";
+            mensagemPagamento = "Pagamento via boleto gerado com sucesso.";
+        } else if ("pix".equals(formaPagamento)) {
+            // Pagamento via Pix, sem necessidade de gerar UUID
+            detalhePagamento = "Chave Pix gerada com sucesso.";
+            mensagemPagamento = "Pagamento via Pix gerado com sucesso.";
         } else {
-            model.addAttribute("numeroCartao", "Não aplicável");
+            return "redirect:/erroPagamento";  // Caso a forma de pagamento não seja reconhecida
         }
 
-        // Finaliza o pedido
+        // Salva o pedido no banco de dados
         pedidoService.finalizarPedido(pedido, freteEscolhido, formaPagamento, idEnderecoEntrega);
+
+        // Limpa o carrinho da sessão após finalizar o pedido
         session.removeAttribute("carrinho");
 
+        // Adiciona as informações ao modelo para a view
         model.addAttribute("pedido", pedido);
-        model.addAttribute("formaPagamento", formaPagamento);
-        model.addAttribute("numeroCartao", "Não aplicável");
+        model.addAttribute("mensagemPagamento", mensagemPagamento);
+        model.addAttribute("detalhePagamento", detalhePagamento);
         model.addAttribute("enderecoEntrega", enderecoEntrega);
 
+        // Redireciona para a página de "meus pedidos"
         return "redirect:/meusPedidos";
     }
 
-    // Método fictício para gerar código de boleto
-    private String gerarCodigoBoleto() {
-        // Aqui você poderia gerar um código de boleto ou link de pagamento real
-        return "BOLETO-1234567890";  // Exemplo de código fictício
-    }
+
 
     @GetMapping("/meusPedidos")
     public String exibirMeusPedidos(HttpSession session, Model model) {

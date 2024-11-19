@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -48,7 +48,7 @@
             <select name="formaPagamento" id="formaPagamento" required onchange="mostrarCamposCartao()">
                 <option value="cartao">Cartão de Crédito</option>
                 <option value="boleto">Boleto Bancário</option>
-                <option value="paypal">PayPal</option>
+                <option value="pix">PIX</option>
             </select>
 
             <br><br>
@@ -70,7 +70,7 @@
             <select name="enderecoEntrega" id="enderecoEntrega" required>
                 <option th:each="enderecoEntrega : ${pedido.cliente.enderecosEntrega}"
                         th:value="${enderecoEntrega.idEnderecoEntrega}"
-                        th:text="${enderecoEntrega.logradouro+ ', ' + enderecoEntrega.bairro + ' - ' + enderecoEntrega.cidade}"></option>
+                        th:text="${enderecoEntrega.logradouro + ', ' + enderecoEntrega.bairro + ' - ' + enderecoEntrega.cidade}"></option>
             </select>
 
             <br><br>
@@ -79,10 +79,6 @@
         </form>
     </div>
 
-    <div th:if="${codigoBoleto != null}">
-        <h3>Pagamento via Boleto</h3>
-        <p><strong>Código do Boleto:</strong> <span th:text="${codigoBoleto}"></span></p>
-    </div>
 </div>
 
 <script>

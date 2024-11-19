@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/listarPedidos.css">
+    <title>Lista de Pedidos</title>
+</head>
+<body>
+<h1>Lista de Pedidos</h1>
+<table>
+    <thead>
+    <tr>
+        <th>ID Pedido</th>
+        <th>Data</th>
+        <th>Forma de Pagamento</th>
+        <th>Status</th>
+        <th>Valor Total</th>
+        <th>Alterar Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="pedido : ${pedidos}">
+        <td th:text="${pedido.idPedido}"></td>
+        <td th:text="${pedido.data}"></td>
+        <td th:text="${pedido.formaPagamento}"></td>
+        <td th:text="${pedido.status}"></td>
+        <td th:text="${pedido.valorTotal}"></td>
+
+        <!-- Formulário para alterar status -->
+        <td>
+            <form th:action="@{/alterarStatus}" method="post">
+                <input type="hidden" name="idPedido" th:value="${pedido.idPedido}"/>
+
+                <select name="status" required>
+                    <option value="" disabled selected>Escolha um status</option>
+                    <option value="Aguardando pagamento">Aguardando pagamento</option>
+                    <option value="Pagamento rejeitado">Pagamento rejeitado</option>
+                    <option value="Pagamento com sucesso">Pagamento com sucesso</option>
+                    <option value="Aguardando retirada">Aguardando retirada</option>
+                    <option value="Em trânsito">Em trânsito</option>
+                    <option value="Entregue">Entregue</option>
+                </select>
+
+                <button type="submit">Alterar Status</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
