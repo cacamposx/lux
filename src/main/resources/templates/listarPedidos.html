@@ -13,7 +13,6 @@
     <tr>
         <th>ID Pedido</th>
         <th>Data</th>
-        <th>Forma de Pagamento</th>
         <th>Status</th>
         <th>Valor Total</th>
         <th>Alterar Status</th>
@@ -23,7 +22,6 @@
     <tr th:each="pedido : ${pedidos}">
         <td th:text="${pedido.idPedido}"></td>
         <td th:text="${pedido.data}"></td>
-        <td th:text="${pedido.formaPagamento}"></td>
         <td th:text="${pedido.status}"></td>
         <td th:text="${pedido.valorTotal}"></td>
 

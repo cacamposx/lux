@@ -42,9 +42,9 @@
     <div>
         <label for="frete">Escolha o frete:</label>
         <select id="frete" name="frete" form="carrinhoForm" th:onchange="this.form.submit()">
-            <option value="5.00" th:selected="${frete == 5.00}">Frete Econômico - R$ 5,00</option>
-            <option value="10.00" th:selected="${frete == 10.00}">Frete Padrão - R$ 10,00</option>
-            <option value="20.00" th:selected="${frete == 20.00}">Frete Expresso - R$ 20,00</option>
+            <option value="10.00" th:selected="${frete == 10.00}">Frete Econômico - R$ 10,00</option>
+            <option value="20.00" th:selected="${frete == 20.00}">Frete Padrão - R$ 20,00</option>
+            <option value="30.00" th:selected="${frete == 30.00}">Frete Expresso - R$ 30,00</option>
         </select>
     </div>
 

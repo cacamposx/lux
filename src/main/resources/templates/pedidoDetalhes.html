@@ -3,52 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/css/meusPedidos.css">
+  <link rel="stylesheet" href="/css/pedidoDetalhes.css">
   <title>Detalhes do Pedido</title>
 </head>
 <body>
 <div class="container">
-  <h1>Detalhes do Pedido <span th:text="${pedido.idPedido}"></span></h1>
+  <h1>Detalhes do Pedido</h1>
 
-  <div>
-    <h3>Informações do Pedido</h3>
+  <!-- Informações do Pedido -->
+  <div class="pedido-info">
+    <p><strong>ID Pedido:</strong> <span th:text="${pedido.idPedido}"></span></p>
     <p><strong>Data:</strong> <span th:text="${pedido.data}"></span></p>
     <p><strong>Forma de Pagamento:</strong> <span th:text="${pedido.formaPagamento}"></span></p>
     <p><strong>Status:</strong> <span th:text="${pedido.status}"></span></p>
     <p><strong>Valor Total:</strong> <span th:text="${pedido.valorTotal}"></span></p>
   </div>
 
-  <div>
-    <h3>Endereço de Entrega</h3>
-    <p><strong>Endereço:</strong> <span th:text="${pedido.enderecoEntrega.endereco}"></span></p>
-    <p><strong>Cidade:</strong> <span th:text="${pedido.enderecoEntrega.cidade}"></span></p>
-    <p><strong>CEP:</strong> <span th:text="${pedido.enderecoEntrega.cep}"></span></p>
-  </div>
+  <!-- Itens do Pedido -->
+  <h3 th:if="${pedido.itens != null and not #lists.isEmpty(pedido.itens)}">Itens do Pedido</h3>
+  <table th:if="${pedido.itens != null and not #lists.isEmpty(pedido.itens)}">
+    <thead>
+    <tr>
+      <th>Produto</th>
+      <th>Preço Unitário</th>
+      <th>Quantidade</th>
+      <th>Total</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item : ${pedido.itens}">
+      <td th:text="${item.produto.nome}"></td>
+      <td th:text="${item.precoUnitario}"></td>
+      <td th:text="${item.quantidade}"></td>
+      <td th:text="${item.total}"></td>
+    </tr>
+    </tbody>
+  </table>
 
-  <div>
-    <h3>Itens do Pedido</h3>
-    <table>
-      <thead>
-      <tr>
-        <th>Produto</th>
-        <th>Quantidade</th>
-        <th>Preço Unitário</th>
-        <th>Subtotal</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr th:each="item : ${pedido.itens}">
-        <td th:text="${item.produto.nome}"></td>
-        <td th:text="${item.quantidade}"></td>
-        <td th:text="${item.preco}"></td>
-        <td th:text="${item.total}"></td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
+  <!-- Endereço de Entrega -->
+  <h3 th:if="${pedido.enderecoEntrega != null}">Endereço de Entrega</h3>
+  <p th:if="${pedido.enderecoEntrega != null}">
+    <strong>Logradouro:</strong> <span th:text="${pedido.enderecoEntrega.logradouro}"></span>
+  </p>
+  <p th:if="${pedido.enderecoEntrega != null}">
+    <strong>Bairro:</strong> <span th:text="${pedido.enderecoEntrega.bairro}"></span>
+  </p>
+  <p th:if="${pedido.enderecoEntrega != null}">
+    <strong>Cidade:</strong> <span th:text="${pedido.enderecoEntrega.cidade}"></span>
+  </p>
+  <p th:if="${pedido.enderecoEntrega != null}">
+    <strong>CEP:</strong> <span th:text="${pedido.enderecoEntrega.cep}"></span>
+  </p>
+  <p th:if="${pedido.enderecoEntrega != null}">
+    <strong>Complemento:</strong> <span th:text="${pedido.enderecoEntrega.complemento}"></span>
+  </p>
 
+  <!-- Botão para voltar aos pedidos -->
   <div class="text-center">
-    <a href="/meusPedidos" class="btn btn-back">Voltar à lista de pedidos</a>
+    <a href="/meusPedidos" class="btn btn-back">Voltar aos Pedidos</a>
   </div>
 </div>
 </body>

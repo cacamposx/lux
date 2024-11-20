@@ -87,6 +87,10 @@ public class PedidoService {
         return pedidoOptional.orElse(null);
     }
 
+    public Pedido buscarPedidoPorId(int id) {
+        return pedidoRepository.findById(id).orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
+    }
+
     public Pedido salvarPedido(Pedido pedido) {
         return pedidoRepository.save(pedido);
     }

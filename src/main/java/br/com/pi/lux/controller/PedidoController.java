@@ -3,17 +3,18 @@ package br.com.pi.lux.controller;
 import br.com.pi.lux.model.*;
 import br.com.pi.lux.service.PedidoService;
 import br.com.pi.lux.service.EnderecoEntregaService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Controller
@@ -167,4 +168,21 @@ public class PedidoController {
 
         return "meusPedidos";  // Página que exibe os pedidos
     }
+
+    @GetMapping("/pedido/{id}/detalhes")
+    public String detalhesPedido(@PathVariable("id") int id, Model model) {
+        Pedido pedido = pedidoService.buscarPedidoPorId(id);
+
+        // Se o pedido não for encontrado, redireciona para a página de erro
+        if (pedido == null) {
+            return "error"; // Página de erro personalizada
+        }
+
+        // Adiciona o pedido ao modelo para ser usado no template
+        model.addAttribute("pedido", pedido);
+
+        // Retorna o template de detalhes do pedido
+        return "pedidoDetalhes";
+    }
+
 }

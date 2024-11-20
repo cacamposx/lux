@@ -22,7 +22,6 @@
         </tr>
         </thead>
         <tbody>
-
         <tr th:each="pedido : ${pedidos}">
             <td th:text="${pedido.idPedido}"></td>
             <td th:text="${pedido.data}"></td>
@@ -30,8 +29,7 @@
             <td th:text="${pedido.status}"></td>
             <td th:text="${pedido.valorTotal}"></td>
             <td>
-                <!-- Botão para visualizar os itens do pedido -->
-                <a href="/pedido/${pedido.idPedido}" class="btn btn-view">Ver Detalhes</a>
+                <a th:href="@{/pedido/{id}/detalhes(id=${pedido.idPedido})}" class="btn">Ver Detalhes</a>
             </td>
         </tr>
 
