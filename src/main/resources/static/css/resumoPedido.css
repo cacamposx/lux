@@ -1,0 +1,118 @@
+/* Resetando margens e preenchimentos */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Corpo */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    margin: 20px;
+}
+
+/* Cabeçalho */
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2.5rem;
+    color: #004d40;
+}
+
+/* Informações Gerais */
+h3 {
+    font-size: 1.5rem;
+    color: #004d40;
+    margin-bottom: 10px;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para seções de informação */
+div {
+    margin-bottom: 30px;
+}
+
+div p {
+    font-size: 1rem;
+    margin: 5px 0;
+}
+
+/* Estilos das informações do cliente */
+.cliente-info {
+    border-bottom: 2px solid #004d40;
+    padding-bottom: 15px;
+}
+
+.cliente-info p {
+    font-size: 1rem;
+}
+
+/* Estilos do resumo do pedido */
+.pedido-info {
+    border-bottom: 2px solid #004d40;
+    padding-bottom: 15px;
+}
+
+.pedido-info p {
+    font-size: 1rem;
+}
+
+/* Estilos do endereço de entrega */
+.endereco-info {
+    border-bottom: 2px solid #004d40;
+    padding-bottom: 15px;
+}
+
+.endereco-info p {
+    font-size: 1rem;
+}
+
+/* Estilos da forma de pagamento */
+.pagamento-info p {
+    font-size: 1rem;
+}
+
+/* Link de navegação */
+a {
+    display: inline-block;
+    background-color: #004d40;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+a:hover {
+    background-color: #45a049;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem;
+    }
+
+    h3 {
+        font-size: 1.25rem;
+    }
+
+    .container {
+        padding: 20px;
+    }
+
+    div p {
+        font-size: 0.9rem;
+    }
+}

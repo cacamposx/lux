@@ -62,9 +62,50 @@ body {
     color: white;
 }
 
+/* Estilo geral para os ícones de navegação */
 .iconNav {
     height: auto;
+    width: 50px; /* Tamanho fixo para todos os ícones */
+    margin: 0 10px; /* Espaçamento entre os ícones */
+    transition: transform 0.2s, opacity 0.2s; /* Efeito de transição suave */
+}
+
+.iconNav:hover {
+    transform: scale(1.1); /* Aumenta o tamanho do ícone ao passar o mouse */
+    opacity: 0.8; /* Reduz um pouco a opacidade para dar um efeito visual */
+}
+
+.navbar-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Para garantir que o logout seja igual aos outros ícones */
+.iconNav.logout {
     width: 50px;
+}
+
+
+.navbar-nav .nav-item {
+    margin: 0 15px; /* Espaçamento entre os itens de navegação */
+}
+
+/* Se você quiser adicionar uma cor de fundo ao passar o mouse */
+.iconNav:hover {
+    background-color: #f0f0f0; /* Cor de fundo para o efeito de hover */
+    border-radius: 50%; /* Para tornar o fundo arredondado */
+}
+.cabecalho {
+    background-color: #BBC1BF;
+    padding: 10px 0;
+}
+
+.navbar {
+    padding: 0;
+}
+.navbar-toggler-icon {
+    background-color: #004d40; /* Cor do ícone do menu */
 }
 
 .logoNav {
@@ -72,6 +113,3 @@ body {
     width: 100px;
 }
 
-.cabecalho {
-    background-color: #BBC1BF;;
-}

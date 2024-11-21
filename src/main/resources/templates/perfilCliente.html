@@ -8,6 +8,11 @@
 <body>
 <header>
     <h1>Perfil do Cliente</h1>
+    <a href="/homeEcommerce" class="btn-home">Home</a>
+    <a th:if="${isLoggedIn}" th:href="@{/logoutCliente}">
+        <button class="btn-sair">Sair</button>
+    </a>
+
 </header>
 
 <!-- Exibição da mensagem de erro, caso a sessão tenha expirado -->

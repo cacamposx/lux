@@ -3,9 +3,12 @@ package br.com.pi.lux.controller;
 import br.com.pi.lux.model.Produto;
 import br.com.pi.lux.model.ProdutoImagem;
 import br.com.pi.lux.repository.ProdutoRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,13 +55,19 @@ public class HomeEcommerceController {
     @GetMapping("/homeEcommerce")
     public String home(
             Model model,
-            @RequestParam(required = false) String nome) {
+            @RequestParam(required = false) String nome,
+            HttpSession session) {
+
+        // Verifica se o cliente está logado pela sessão
+        Object cliente = session.getAttribute("cliente");
+        boolean isLoggedIn = cliente != null;  // Verifica se existe um cliente na sessão
+        model.addAttribute("isLoggedIn", isLoggedIn);
 
         List<Produto> produtos;
         if (nome != null && !nome.isEmpty()) {
             produtos = repository.findByNomeContainingIgnoreCase(nome);
         } else {
-            produtos = repository.findAll(); //
+            produtos = repository.findAll();
         }
 
         Page<Produto> produtosPage = new PageImpl<>(produtos);
@@ -77,4 +86,5 @@ public class HomeEcommerceController {
 
         return "homeEcommerce";
     }
+
 }

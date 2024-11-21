@@ -19,6 +19,11 @@ public class PerfilClienteController {
         // Recupera o cliente da sessão
         Cliente cliente = (Cliente) session.getAttribute("cliente");
 
+        // Verifica se o cliente está logado pela sessão
+        boolean isLoggedIn = cliente != null;  // Verifica se existe um cliente na sessão
+        model.addAttribute("isLoggedIn", isLoggedIn);
+
+
         // Verifica se o cliente está na sessão
         if (cliente != null) {
             model.addAttribute("cliente", cliente);
@@ -29,5 +34,4 @@ public class PerfilClienteController {
         model.addAttribute("mensagem", "Sessão expirada. Faça login novamente.");
         return "redirect:/loginCliente";
     }
-
 }

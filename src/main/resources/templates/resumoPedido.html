@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resumo do Pedido</title>
+    <link rel="stylesheet" href="/css/resumoPedido.css">
 </head>
 <body>
 
@@ -24,10 +25,24 @@
         <p><strong>ID do Pedido:</strong>
             <span th:text="${pedido?.idPedido ?: 'Não disponível'}"></span>
         </p>
+        <ul>
+            <li th:each="item : ${carrinho}">
+                <p><strong>Descrição do produto:</strong>
+                <span th:text="${item.produto.nome}"></span>
+                <p><strong>Quantidade Total:</strong>
+                <span th:text="${item.quantidade}"></span>
+                <p><strong>Preço Produto:</strong>
+                <span th:text="${item.produto.preco}"></span>
+                <p><strong>Preço Total:</strong>
+                <span th:text="${item.total}"></span>
+            </li>
+        </ul>
+
         <p><strong>Data do Pedido:</strong>
         <p th:text="${pedido?.data != null ? T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy').format(pedido.data) : 'Data não definida'}"></p>
-
         </p>
+
+
         <p><strong>Total:</strong>
             <span th:text="${pedido?.valorTotal ?: '0.00'}"></span>
         </p>
@@ -52,6 +67,7 @@
 
     <div>
         <a href="/meusPedidos">Ver meus pedidos</a>
+        <a href="/finalizarCompra">Voltar</a>
     </div>
 </div>
 
