@@ -8,6 +8,7 @@
 </head>
 <body>
 
+
 <div class="container">
     <h1>Resumo do Pedido</h1>
 
@@ -18,27 +19,35 @@
         <p><strong>Email:</strong> <span th:text="${pedido.cliente.email}"></span></p>
     </div>
 
-    <!-- Informações do Pedido -->
     <div class="pedido-info">
         <h3>Detalhes do Pedido</h3>
-        <p><strong>ID do Pedido:</strong> <span th:text="${pedido.id}"></span></p>
-        <p><strong>Data do Pedido:</strong> <span th:text="${#dates.format(pedido.data, 'dd/MM/yyyy')}"></span></p>
-        <p><strong>Total:</strong> <span th:text="${pedido.valorTotal}"></span></p>
-    </div>
+        <p><strong>ID do Pedido:</strong>
+            <span th:text="${pedido?.idPedido ?: 'Não disponível'}"></span>
+        </p>
+        <p><strong>Data do Pedido:</strong>
+        <p th:text="${pedido?.data != null ? T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy').format(pedido.data) : 'Data não definida'}"></p>
 
-    <!-- Endereço de Entrega -->
-    <div class="endereco-info">
-        <h3>Endereço de Entrega</h3>
-        <p><strong>Endereço:</strong>
-            <span th:text="${enderecoEntrega.logradouro + ', ' + enderecoEntrega.numero + ', ' + enderecoEntrega.bairro + ' - ' + enderecoEntrega.cidade + ' / ' + enderecoEntrega.uf}"></span>
+        </p>
+        <p><strong>Total:</strong>
+            <span th:text="${pedido?.valorTotal ?: '0.00'}"></span>
         </p>
     </div>
 
-    <!-- Forma de Pagamento -->
+    <div class="endereco-info">
+        <h3>Endereço de Entrega</h3>
+        <p><strong>Endereço:</strong>
+            <span th:text="${pedido?.enderecoEntrega?.logradouro ?: 'Endereço não definido'}"></span>
+        </p>
+    </div>
+
     <div class="pagamento-info">
         <h3>Forma de Pagamento</h3>
-        <p><strong>Forma de Pagamento:</strong> <span th:text="${pedido.formaPagamento}"></span></p>
-        <p><strong>Cartão:</strong> <span th:text="${numeroCartao}"></span></p>
+        <p><strong>Forma de Pagamento:</strong>
+            <span th:text="${pedido?.formaPagamento ?: 'Forma de pagamento não definida'}"></span>
+        </p>
+        <p><strong>Cartão:</strong>
+            <span th:text="${numeroCartao ?: 'Não aplicável'}"></span>
+        </p>
     </div>
 
     <div>

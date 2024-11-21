@@ -74,7 +74,7 @@
             </select>
 
             <br><br>
-
+            <button type="button" onclick="window.location.href='/resumoPedido'">Revisar Pedido</button>
             <button type="submit">Finalizar Pedido</button>
         </form>
     </div>
@@ -85,9 +85,21 @@
     function mostrarCamposCartao() {
         let formaPagamento = document.getElementById('formaPagamento').value;
         let camposCartao = document.getElementById('camposCartao');
-        camposCartao.style.display = formaPagamento === 'cartao' ? 'block' : 'none';
+
+        if (formaPagamento === 'cartao') {
+            camposCartao.style.display = 'block';
+            document.getElementById('numeroCartao').setAttribute('required', true);
+            document.getElementById('validadeCartao').setAttribute('required', true);
+            document.getElementById('codigoSeguranca').setAttribute('required', true);
+        } else {
+            camposCartao.style.display = 'none';
+            document.getElementById('numeroCartao').removeAttribute('required');
+            document.getElementById('validadeCartao').removeAttribute('required');
+            document.getElementById('codigoSeguranca').removeAttribute('required');
+        }
     }
 
+    // Garante que o comportamento seja correto ao carregar a página
     window.onload = mostrarCamposCartao;
 </script>
 

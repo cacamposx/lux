@@ -185,4 +185,43 @@ public class PedidoController {
         return "pedidoDetalhes";
     }
 
+    @GetMapping("/resumoPedido")
+    public String exibirResumoPedido(Model model, HttpSession session) {
+        // Verifica se o cliente está logado
+        Cliente cliente = (Cliente) session.getAttribute("cliente");
+
+        if (cliente == null) {
+            return "redirect:/loginCliente";  // Redireciona para login se cliente não estiver logado
+        }
+
+        // Obtém o carrinho da sessão
+        List<ItemCarrinho> carrinho = (List<ItemCarrinho>) session.getAttribute("carrinho");
+
+        if (carrinho == null || carrinho.isEmpty()) {
+            return "redirect:/carrinho";  // Redireciona se o carrinho estiver vazio
+        }
+
+        // Calcula o total do carrinho
+        double totalCarrinho = carrinho.stream()
+                .mapToDouble(ItemCarrinho::getTotal)
+                .sum();
+
+        // Cria o pedido temporário para mostrar o resumo
+        Pedido pedido = new Pedido();
+        pedido.setCliente(cliente);
+        pedido.setValorTotal(totalCarrinho);
+        pedido.setFormaPagamento("");  // Forma de pagamento ainda não escolhida
+        pedido.setStatus("Aguardando finalização"); // Pedido em estado intermediário
+        pedido.setData(LocalDate.now()); // Define a data do pedido
+
+        model.addAttribute("carrinho", carrinho);
+        model.addAttribute("totalCarrinho", totalCarrinho);
+        model.addAttribute("pedido", pedido);
+
+        // Redireciona para a página de resumo do pedido
+        return "resumoPedido";
+    }
+
+
+
 }
