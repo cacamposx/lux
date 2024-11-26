@@ -138,7 +138,7 @@
 <script>
     function buscarEndereco() {
         var cep = document.getElementById("cep").value;
-        if (cep && cep.length === 8) {
+        if (cep.length === 8) {
             fetch('https://viacep.com.br/ws/' + cep + '/json/')
                 .then(response => {
                     if (response.ok) {
@@ -158,12 +158,11 @@
                     }
                 })
                 .catch(error => alert('Erro ao buscar CEP: ' + error.message));
-        } else {
-            alert('CEP inválido');
         }
     }
 
     function copiarEnderecoFaturamento() {
+
         let enderecoFaturamentoLogradouro = document.getElementById("enderecoFaturamento.logradouro").value;
         let enderecoFaturamentoBairro = document.getElementById("enderecoFaturamento.bairro").value;
         let enderecoFaturamentoCidade = document.getElementById("enderecoFaturamento.cidade").value;
@@ -172,6 +171,7 @@
         let enderecoFaturamentoComplemento = document.getElementById("enderecoFaturamento.complemento").value;
 
         if (enderecoFaturamentoLogradouro && enderecoFaturamentoBairro && enderecoFaturamentoCidade && enderecoFaturamentoUF && enderecoFaturamentoNumero) {
+
             document.getElementById("enderecoEntrega.logradouro").value = enderecoFaturamentoLogradouro;
             document.getElementById("enderecoEntrega.bairro").value = enderecoFaturamentoBairro;
             document.getElementById("enderecoEntrega.cidade").value = enderecoFaturamentoCidade;
