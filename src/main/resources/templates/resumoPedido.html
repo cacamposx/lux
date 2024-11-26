@@ -22,9 +22,6 @@
 
     <div class="pedido-info">
         <h3>Detalhes do Pedido</h3>
-        <p><strong>ID do Pedido:</strong>
-            <span th:text="${pedido?.idPedido ?: 'Não disponível'}"></span>
-        </p>
         <ul>
             <li th:each="item : ${carrinho}">
                 <p><strong>Descrição do produto:</strong>

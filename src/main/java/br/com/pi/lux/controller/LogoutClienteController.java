@@ -9,9 +9,9 @@ public class LogoutClienteController {
 
     @GetMapping("/logoutCliente")
     public String logout(HttpSession session) {
-        // Invalida a sessão para remover todos os atributos armazenados
+
         session.invalidate();
-        // Redireciona para a página de login ou inicial
+
         return "redirect:/loginCliente";
     }
 }
