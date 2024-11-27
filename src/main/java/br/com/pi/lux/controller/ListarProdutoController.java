@@ -15,6 +15,7 @@ import br.com.pi.lux.model.ProdutoImagem;
 import br.com.pi.lux.repository.ProdutoRepository;
 
 import java.util.Base64;
+import java.util.List;
 
 @Controller
 public class ListarProdutoController {
@@ -57,4 +58,24 @@ public class ListarProdutoController {
 
         return "listarProd";
     }
+
+    @GetMapping("/pesquisarProduto")
+    public String pesquisarProduto(@RequestParam("nomeProduto") String nomeProduto, Model model) {
+        List<Produto> produtosEncontrados = repository.findByNomeContainingIgnoreCase(nomeProduto);
+
+        // Codifica as imagens em Base64 para os produtos encontrados
+        produtosEncontrados.forEach(produto -> {
+            if (produto.getImagens() != null && !produto.getImagens().isEmpty()) {
+                ProdutoImagem imagemPrincipal = produto.getImagemPrincipal();
+                if (imagemPrincipal != null && imagemPrincipal.getImagem() != null) {
+                    String base64Image = Base64.getEncoder().encodeToString(imagemPrincipal.getImagem());
+                    produto.setBase64Image(base64Image);
+                }
+            }
+        });
+        model.addAttribute("produtos", produtosEncontrados);
+
+        return "homeEcommerce";
+    }
+
 }
