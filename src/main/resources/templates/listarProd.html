@@ -72,7 +72,7 @@
                     <a th:href="@{/alterarProd(idProduto=${produto.idProduto})}" class="btn btn-warning btn-sm">Alterar</a>
                     <a th:if="${produto.status}" th:href="@{/alterarStatusProd(idProduto=${produto.idProduto})}" class="btn btn-danger btn-sm">Desativar</a>
                     <a th:if="${!produto.status}" th:href="@{/alterarStatusProd(idProduto=${produto.idProduto})}" class="btn btn-success btn-sm">Ativar</a>
-                    <a th:href="@{/detalhesProd(idProduto=${produto.idProduto})}" class="btn btn-info btn-sm">Detalhes</a>
+                    <a th:href="@{/detalhesProdADM(idProduto=${produto.idProduto})}" class="btn btn-info btn-sm">Detalhes</a>
                 </td>
             </tr>
             </tbody>

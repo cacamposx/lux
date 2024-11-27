@@ -15,6 +15,7 @@
         <a th:href="@{/listarProd}" class="nav-link">Listar Produto</a>
         <a th:if="${usuarioLogado.grupo == 'admin'}" th:href="@{/listarUsu}" class="nav-link">Listar Usuário</a>
         <a th:if="${usuarioLogado.grupo == 'estoquista'}" th:href="@{/listarPedidos}" class="nav-link">Listar Pedidos</a>
+        <a th:if="${usuarioLogado}" th:href="@{/logout}" class="nav-link">Sair</a>
     </nav>
 </div>
 </body>

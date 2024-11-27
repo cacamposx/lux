@@ -1,5 +1,6 @@
     package br.com.pi.lux.controller;
 
+    import br.com.pi.lux.model.ItemCarrinho;
     import br.com.pi.lux.model.Produto;
     import br.com.pi.lux.repository.ProdutoRepository;
     import jakarta.servlet.http.HttpSession;
@@ -30,7 +31,6 @@
             Produto produto = repository.findById(id).orElse(null);
 
             if (produto != null) {
-                // Obtém o carrinho da sessão, ou cria um novo se não existir
                 List<ItemCarrinho> carrinho = (List<ItemCarrinho>) session.getAttribute("carrinho");
                 if (carrinho == null) {
                     carrinho = new ArrayList<>();

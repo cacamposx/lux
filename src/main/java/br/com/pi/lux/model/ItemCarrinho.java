@@ -1,6 +1,4 @@
-package br.com.pi.lux.controller;
-
-import br.com.pi.lux.model.Produto;
+package br.com.pi.lux.model;
 
 public class ItemCarrinho {
     private Produto produto;
