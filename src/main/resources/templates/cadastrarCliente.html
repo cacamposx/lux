@@ -137,8 +137,8 @@
 
 <script>
     function buscarEndereco() {
-        var cep = document.getElementById("cep").value;
-        if (cep.length === 8) {
+        var cep = document.getElementById("cep").value.replace(/\D/g, '');  // Remove qualquer caractere não numérico
+        if (cep.length === 8) {  // Verifica se o CEP tem 8 caracteres
             fetch('https://viacep.com.br/ws/' + cep + '/json/')
                 .then(response => {
                     if (response.ok) {
@@ -148,16 +148,18 @@
                     }
                 })
                 .then(data => {
-                    if (data && data.cep) {
+                    if (data && !data.erro) {  // Verifica se o dado retornado é válido e se não há erro
                         document.getElementById("enderecoFaturamento.logradouro").value = data.logradouro || '';
                         document.getElementById("enderecoFaturamento.bairro").value = data.bairro || '';
-                        document.getElementById("enderecoFaturamento.cidade").value = data.localidade || '';
+                        document.getElementById("enderecoFaturamento.cidade").value = data.localidade|| '';
                         document.getElementById("enderecoFaturamento.uf").value = data.uf || '';
                     } else {
                         alert('Endereço não encontrado para o CEP informado.');
                     }
                 })
                 .catch(error => alert('Erro ao buscar CEP: ' + error.message));
+        } else {
+            alert('CEP inválido! Deve conter 8 números.');
         }
     }
 
